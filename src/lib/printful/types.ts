@@ -7,6 +7,7 @@ export type PrintfulProduct = {
   imageUrl: string | null;
   category: string;
   mock?: boolean;
+  variantCount?: number;
 };
 
 export type PrintfulCatalogResult = {

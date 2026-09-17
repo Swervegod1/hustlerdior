@@ -11,6 +11,13 @@ export const metadata: Metadata = {
 export default async function CollectionPage() {
   const catalog = await PrintfulClient.fetchCatalog();
 
+  const liveBlurb =
+    catalog.source === "printful"
+      ? ` Live Printful · ${catalog.products.length} drops.`
+      : catalog.source === "mock"
+        ? " Mock drops shown until Printful credentials are configured."
+        : "";
+
   return createElement(
     Fragment,
     null,
@@ -25,9 +32,7 @@ export default async function CollectionPage() {
           "p",
           null,
           "The Concrete Edit catalog. Graphic streetwear, made-to-order.",
-          catalog.source === "mock"
-            ? " Mock drops shown until Printful credentials are configured."
-            : " Live from Printful.",
+          liveBlurb,
         ),
       ),
     ),
