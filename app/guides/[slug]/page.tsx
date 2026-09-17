@@ -89,7 +89,13 @@ export default async function GuidePage({ params }: GuidePageProps) {
         ),
         createElement(
           "div",
-          { style: { marginTop: "2.5rem", borderTop: "1px solid var(--line)", paddingTop: "2rem" } },
+          {
+            style: {
+              marginTop: "2.5rem",
+              borderTop: "1px solid var(--line)",
+              paddingTop: "2rem",
+            },
+          },
           createElement(
             "h2",
             {
