@@ -16,8 +16,20 @@ Lean but runnable scaffold:
 - Homepage with Concrete Edit streetwear vibe (not generic SaaS)
 - `/collection` catalog shell
 - `/product/[id]` product detail shell
+- `/guides` SSR content routes with FAQ JSON-LD
 - `PrintfulClient` class with static methods + mock fallback when env is missing
 - Header / ProductCard / Footer components
+
+## Guides
+
+SSR guide pages (single H1 + FAQPage JSON-LD):
+
+- `/guides` — index
+- `/guides/tactical-luxury-streetwear-positioning`
+- `/guides/veteran-owned-streetwear-brand-story`
+- `/guides/concrete-edit-90s-bootleg-graphic-tees`
+- `/guides/independent-streetwear-brands-2026`
+- `/guides/made-to-order-dtc-buying-guide`
 
 ## Setup
 
