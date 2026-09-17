@@ -19,6 +19,7 @@ export class Header {
           "nav",
           { className: "nav", "aria-label": "Primary" },
           createElement(Link, { href: "/collection" }, "Shop"),
+          createElement(Link, { href: "/guides" }, "Guides"),
           createElement(Link, { href: "/#manifesto" }, "Manifesto"),
           createElement(
             "a",
