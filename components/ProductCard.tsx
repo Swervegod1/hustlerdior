@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { createElement } from "react";
 import type { PrintfulProduct } from "@/src/lib/printful/types";
 import { PrintfulClient } from "@/src/lib/printful/client";
 
@@ -8,26 +9,33 @@ type ProductCardProps = {
 
 export class ProductCard {
   static render({ product }: ProductCardProps) {
-    return (
-      <Link href={`/product/${product.id}`} className="product-card">
-        <div className="product-card__media">
-          {product.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={product.imageUrl} alt={product.name} />
-          ) : (
-            <span className="product-card__placeholder">Concrete / Edit</span>
-          )}
-        </div>
-        <div className="product-card__body">
-          <h3 className="product-card__name">{product.name}</h3>
-          <div className="product-card__meta">
-            <span>{product.category}</span>
-            <span className="product-card__price">
-              {PrintfulClient.formatPrice(product)}
-            </span>
-          </div>
-        </div>
-      </Link>
+    const media = product.imageUrl
+      ? createElement("img", { src: product.imageUrl, alt: product.name })
+      : createElement(
+          "span",
+          { className: "product-card__placeholder" },
+          "Concrete / Edit",
+        );
+
+    return createElement(
+      Link,
+      { href: `/product/${product.id}`, className: "product-card" },
+      createElement("div", { className: "product-card__media" }, media),
+      createElement(
+        "div",
+        { className: "product-card__body" },
+        createElement("h3", { className: "product-card__name" }, product.name),
+        createElement(
+          "div",
+          { className: "product-card__meta" },
+          createElement("span", null, product.category),
+          createElement(
+            "span",
+            { className: "product-card__price" },
+            PrintfulClient.formatPrice(product),
+          ),
+        ),
+      ),
     );
   }
 }
