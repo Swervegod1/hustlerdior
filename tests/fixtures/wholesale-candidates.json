@@ -1,0 +1,656 @@
+[
+  {
+    "candidateId": "ss-activewear:SHGD",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 14740,
+    "styleCode": "SHGD",
+    "brand": "Shaka Wear",
+    "name": "Garment-Dyed Heavyweight Tee",
+    "audience": "Unisex",
+    "category": "Tees",
+    "description": "A substantial cotton tee with a worn-in color finish and a roomy silhouette. The 7.5 oz fabric makes it a strong everyday base for layered streetwear. Dye variation gives each piece its own character.",
+    "optionResearch": {
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+      "colors": ["Black", "Cement", "Shadow"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/shaka_wear/shgd",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "ModelColor/126242_omf",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/126242_omf_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "blocked-http-403",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/126242_oms",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/126242_oms_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/126242_omb",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/126242_omb_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  },
+  {
+    "candidateId": "ss-activewear:SHMCS",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 16439,
+    "styleCode": "SHMCS",
+    "brand": "Shaka Wear",
+    "name": "Heavyweight Cropped Tee",
+    "audience": "Unisex",
+    "category": "Tees",
+    "description": "A shorter silhouette built from substantial 7.5 oz cotton. The body keeps a standard width while the sleeves add extra room, making this an easy pairing with higher-rise bottoms or loose trousers.",
+    "optionResearch": {
+      "sizes": ["S", "M", "L", "XL", "2XL"],
+      "colors": ["Black", "Off Black"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/shaka_wear/shmcs",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "ModelColor/136668_omf",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/136668_omf_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/136668_oms",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/136668_oms_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/136668_omb",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/136668_omb_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  },
+  {
+    "candidateId": "ss-activewear:SHVBJ",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 14862,
+    "styleCode": "SHVBJ",
+    "brand": "Shaka Wear",
+    "name": "Varsity Bomber Jacket",
+    "audience": "Unisex",
+    "category": "Layers",
+    "description": "A relaxed varsity layer with a nylon outer shell, polyester lining and padding. Striped rib details frame the neck, cuffs and waist, while matching buttons keep the front clean.",
+    "optionResearch": {
+      "sizes": ["S", "M", "L", "XL", "2XL", "3XL"],
+      "colors": ["Black"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/shaka_wear/shvbj",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "ModelColor/127146_omf",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/127146_omf_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/127146_oms",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/127146_oms_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/127146_omb",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/127146_omb_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  },
+  {
+    "candidateId": "ss-activewear:SHFJP",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 14816,
+    "styleCode": "SHFJP",
+    "brand": "Shaka Wear",
+    "name": "Fleece Joggers",
+    "audience": "Unisex",
+    "category": "Bottoms",
+    "description": "A tapered everyday jogger in an 8.3 oz cotton and polyester blend. Ribbed ankles keep the shape close, with a matching drawcord and a back pocket for small essentials.",
+    "optionResearch": {
+      "sizes": ["S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+      "colors": ["Black"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/shaka_wear/shfjp",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "ModelColor/126905_omf",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/126905_omf_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/126905_oms",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/126905_oms_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/126905_omb",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/126905_omb_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  },
+  {
+    "candidateId": "ss-activewear:LS14001",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 13530,
+    "styleCode": "LS14001",
+    "brand": "Lane Seven",
+    "name": "Premium Fleece Hoodie",
+    "audience": "Unisex",
+    "category": "Layers",
+    "description": "A regular-fit fleece hoodie with a lined three-panel hood and a front pouch. In black, the 8.25 oz fabric blends cotton with recycled polyester and has a cotton face for a smooth exterior.",
+    "optionResearch": {
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL"],
+      "colors": ["Black", "Smoke"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/lane_seven/ls14001",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "ModelColor/120320_omf",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/120320_omf_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/120320_oms",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/120320_oms_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/120320_omb",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/120320_omb_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/120320_f",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/120320_f_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/120320_b",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/120320_b_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  },
+  {
+    "candidateId": "ss-activewear:LS14004",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 13532,
+    "styleCode": "LS14004",
+    "brand": "Lane Seven",
+    "name": "Premium Fleece Crewneck",
+    "audience": "Unisex",
+    "category": "Layers",
+    "description": "An understated crewneck with a regular fit, ribbed edges and an 8.25 oz fleece body. The black version combines cotton and recycled polyester, making it a versatile layer over graphic tees.",
+    "optionResearch": {
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
+      "colors": ["Black", "Smoke"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/lane_seven/ls14004",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "ModelColor/120381_omf",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/120381_omf_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/120381_oms",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/120381_oms_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/120381_omb",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/120381_omb_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/120381_f",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/120381_f_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/120381_b",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/120381_b_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  },
+  {
+    "candidateId": "ss-activewear:PRM2000",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 8811,
+    "styleCode": "PRM2000",
+    "brand": "Independent Trading Co.",
+    "name": "Women's Wave Wash Crewneck",
+    "audience": "Women",
+    "category": "Layers",
+    "description": "A women's crewneck with raglan sleeves and a lived-in washed finish. Its 7 oz cotton and polyester fleece offers a lighter layering option. The wash process creates natural variation between pieces.",
+    "optionResearch": {
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
+      "colors": ["Black", "Bone", "Shadow"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/independent_trading_co/prm2000",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "ModelColor/87165_omf",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/87165_omf_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/87165_oms",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/87165_oms_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/87165_omb",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/87165_omb_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/87165_f",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/87165_f_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/87165_d",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/87165_d_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/87165_b",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/87165_b_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  },
+  {
+    "candidateId": "ss-activewear:PRM2500",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 7789,
+    "styleCode": "PRM2500",
+    "brand": "Independent Trading Co.",
+    "name": "Women's Wave Wash Hoodie",
+    "audience": "Women",
+    "category": "Layers",
+    "description": "A lightweight women's hooded layer with a classic silhouette. The 7 oz cotton and polyester fleece receives a garment wash for a broken-in finish, with individual variation in the resulting color.",
+    "optionResearch": {
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
+      "colors": ["Black", "Bone", "Shadow"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/independent_trading_co/prm2500",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "ModelColor/79627_omf",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/79627_omf_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/79627_oms",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/79627_oms_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/79627_omb",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/79627_omb_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/79627_f",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/79627_f_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/79627_d",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/79627_d_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/79627_b",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/79627_b_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  },
+  {
+    "candidateId": "ss-activewear:PRM20PNT",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 9667,
+    "styleCode": "PRM20PNT",
+    "brand": "Independent Trading Co.",
+    "name": "Women's Wave Wash Sweatpants",
+    "audience": "Women",
+    "category": "Bottoms",
+    "description": "Women's fleece sweatpants with a classic fit and a washed finish. The 7 oz cotton and polyester blend creates a lighter coordinated look when paired with a Wave Wash hoodie or crewneck.",
+    "optionResearch": {
+      "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
+      "colors": ["Black", "Bone", "Shadow"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/independent_trading_co/prm20pnt",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "ModelColor/92912_omf",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/92912_omf_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/92912_oms",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/92912_oms_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "ModelColor/92912_omb",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/ModelColor/92912_omb_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/92912_f",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/92912_f_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/92912_d",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/92912_d_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/92912_b",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/92912_b_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  },
+  {
+    "candidateId": "ss-activewear:6089M",
+    "supplier": "ss-activewear",
+    "supplierStyleId": 2293,
+    "styleCode": "6089M",
+    "brand": "YP Classics",
+    "name": "Flat-Bill Snapback Cap",
+    "audience": "Unisex",
+    "category": "Accessories",
+    "description": "A structured cap with six panels, a high crown and an adjustable snap closure. The black version uses an acrylic and wool blend, with a flat bill and a contrasting green underside.",
+    "optionResearch": {
+      "sizes": ["Adjustable"],
+      "colors": ["Black"],
+      "scope": "Style-level options only; size/color combinations and stock are unverified."
+    },
+    "sourceUrl": "https://www.ssactivewear.com/p/yp_classics/6089m",
+    "sourceCheckedAt": "2026-09-13T00:00:00.000Z",
+    "imageReferences": [
+      {
+        "supplierPath": "Color/34673_f",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/34673_f_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/34673_d",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/34673_d_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      },
+      {
+        "supplierPath": "Color/34673_b",
+        "candidateCdnUrl": "https://cdn.ssactivewear.com/Images/Color/34673_b_fm.jpg",
+        "color": "Black",
+        "downloadStatus": "not-fetched",
+        "localFile": null,
+        "usagePermission": "pending"
+      }
+    ],
+    "supplierVariantSku": null,
+    "wholesaleCostCents": null,
+    "shippingCostCents": null,
+    "retailPriceCents": null,
+    "currency": "USD",
+    "quantityAvailable": null,
+    "stockCheckedAt": null,
+    "resalePermission": "pending",
+    "fulfillmentStatus": "not-configured",
+    "status": "research-draft",
+    "saleEnabled": false
+  }
+]
