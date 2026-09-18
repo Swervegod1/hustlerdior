@@ -1,0 +1,14 @@
+query HustlerDiorImport($after: String) {
+  products(first: 3, after: $after, sortKey: ID) {
+    pageInfo { hasNextPage endCursor }
+    nodes {
+      id title handle status vendor productType description descriptionHtml tags createdAt updatedAt onlineStoreUrl
+      variantsCount { count }
+      media(first: 30) { pageInfo { hasNextPage endCursor } nodes { preview { image { url altText } } } }
+      variants(first: 100) {
+        pageInfo { hasNextPage endCursor }
+        nodes { id title sku price inventoryQuantity inventoryPolicy availableForSale selectedOptions { name value } inventoryItem { tracked } }
+      }
+    }
+  }
+}
