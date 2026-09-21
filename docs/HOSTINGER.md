@@ -119,7 +119,7 @@ Put a configured HTTPS reverse proxy in front of port 3000 and use the productio
 
 ## Search and recovery configuration
 
-Keep `SITE_ROLE=preview` and `SEARCH_INDEXING=false` while reviewing the website. After the primary domain is ready, use `SITE_URL=https://hustlerdior.com`, `SITE_ROLE=primary`, `SEARCH_INDEXING=true`, then rebuild/redeploy. Keep backup instances at `SITE_ROLE=backup` and `SEARCH_INDEXING=false`. A Printful token disables snapshot preview even if `CATALOG_SNAPSHOT_PREVIEW=true`. See [SEO-AEO.md](SEO-AEO.md) for Search Console and live indexing checks and [RECOVERY.md](RECOVERY.md) for the included maintenance website and archive restoration.
+`https://hustlerdior.com` is indexable without flipping `SEARCH_INDEXING`. Set `SITE_URL=https://hustlerdior.com` on that app. Keep backup instances at `SITE_ROLE=backup` (always noindex) and review other hostnames with `SITE_ROLE=preview`. A Printful token disables snapshot preview even if `CATALOG_SNAPSHOT_PREVIEW=true`. See [SEO-AEO.md](SEO-AEO.md) for Search Console and live indexing checks and [RECOVERY.md](RECOVERY.md) for the included maintenance website and archive restoration.
 
 ## Payment worker and AI previews
 

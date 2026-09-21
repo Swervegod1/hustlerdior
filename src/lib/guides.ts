@@ -1,17 +1,11 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseFrontmatter, type GuideFrontmatter } from "./guide-parse";
+import { GUIDE_SLUGS, type GuideSlug } from "./guide-route";
 
 export type Guide = GuideFrontmatter & { body: string };
 
-export const GUIDE_SLUGS = [
-  "what-is-hustler-dior",
-  "tactical-luxury-streetwear-positioning",
-  "veteran-owned-streetwear-brand-story",
-  "concrete-edit-90s-bootleg-graphic-tees",
-] as const;
-
-export type GuideSlug = (typeof GUIDE_SLUGS)[number];
+export { GUIDE_SLUGS, type GuideSlug };
 
 const GUIDES_DIR = join(process.cwd(), "content", "guides");
 

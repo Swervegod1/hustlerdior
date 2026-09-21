@@ -14,12 +14,14 @@ import Navigation from "@/components/Navigation";
 import CartDrawer from "@/components/CartDrawer";
 import { Experience } from "@/components/Experience";
 import { connection } from "next/server";
-import { absoluteUrl, isIndexable } from "@/lib/seo";
+import { requestPublicHost } from "@/lib/request-host";
+import { absoluteUrl, isIndexable, robotsMetadata } from "@/lib/seo";
 import { collections } from "@/lib/collections";
 import StyleDesk from "@/components/StyleDesk";
 
 export async function generateMetadata(): Promise<Metadata> {
   await connection();
+  const indexable = isIndexable(process.env, await requestPublicHost());
   return {
     metadataBase: new URL(absoluteUrl("/")),
     title: {
@@ -28,9 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description:
       "Explore Hustler Dior's original streetwear collection: graphic tees, oversized layers, hoodies, shorts and accessories. Independent by design.",
-    robots: isIndexable()
-      ? { index: true, follow: true }
-      : { index: false, follow: false },
+    robots: robotsMetadata(indexable),
     openGraph: {
       type: "website",
       siteName: "Hustler Dior",

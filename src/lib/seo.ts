@@ -2,6 +2,8 @@ import type { Product } from "./types";
 
 export const CANONICAL_ORIGIN = "https://hustlerdior.com";
 
+const PRODUCTION_HOSTS = new Set(["hustlerdior.com", "www.hustlerdior.com"]);
+
 export function absoluteUrl(path = "/") {
   // The main domain stays canonical even on previews and recovery instances.
   if (!path.startsWith("/") || path.startsWith("//"))
@@ -9,22 +11,83 @@ export function absoluteUrl(path = "/") {
   return new URL(path, CANONICAL_ORIGIN).href;
 }
 
+export function normalizeHost(value: string) {
+  return value.toLowerCase().split(",")[0]?.trim().replace(/:\d+$/, "") ?? "";
+}
+
+export function isProductionHost(host: string) {
+  return PRODUCTION_HOSTS.has(normalizeHost(host));
+}
+
+/** Prefer a forwarded public host when the app process only sees an internal listener. */
+export function publicHostFrom(headers: { get(name: string): string | null }) {
+  const forwarded = normalizeHost(headers.get("x-forwarded-host") || "");
+  const host = normalizeHost(headers.get("host") || "");
+  if (isProductionHost(forwarded)) return forwarded;
+  if (isProductionHost(host)) return host;
+  return forwarded || host;
+}
+
+function siteOrigin(env: Record<string, string | undefined>) {
+  try {
+    return new URL(env.SITE_URL || "").origin;
+  } catch {
+    return "";
+  }
+}
+
+function isInternalHost(hostname: string) {
+  if (!hostname) return true;
+  if (hostname === "localhost" || hostname.endsWith(".localhost")) return true;
+  if (hostname === "::1") return true;
+  if (/^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) return true;
+  return !hostname.includes(".");
+}
+
+/**
+ * Public storefront pages are indexable.
+ * Backup instances and any other public hostname stay noindex.
+ * A leftover SEARCH_INDEXING=false or SITE_ROLE=preview does not hide
+ * hustlerdior.com, including when the edge forwards an internal Host and
+ * SITE_URL is already the canonical origin.
+ */
 export function isIndexable(
   env: Record<string, string | undefined> = process.env,
+  host?: string,
 ) {
-  const publicOrigin = (() => {
-    try {
-      return new URL(env.SITE_URL || "").origin;
-    } catch {
-      return "";
-    }
-  })();
-  return (
-    env.SITE_ROLE === "primary" &&
-    env.SEARCH_INDEXING === "true" &&
-    env.CATALOG_SNAPSHOT_PREVIEW !== "true" &&
-    publicOrigin === CANONICAL_ORIGIN
-  );
+  if (env.SITE_ROLE === "backup") return false;
+  const hostname = host ? normalizeHost(host) : "";
+  if (hostname && isProductionHost(hostname)) return true;
+  if (hostname && !isInternalHost(hostname)) return false;
+  return siteOrigin(env) === CANONICAL_ORIGIN;
+}
+
+/**
+ * Non-public routes stay out of the index even on the production host.
+ * Curated is a catalog preview: noindex, but its links may be followed.
+ * Checkout and order status are private. API routes are not documents.
+ */
+export function unindexedRobotsDirective(pathname: string) {
+  if (/^\/(api|checkout|orders)(\/|$)/.test(pathname)) {
+    return "noindex, nofollow";
+  }
+  if (/^\/curated(\/|$)/.test(pathname)) return "noindex, follow";
+  return null;
+}
+
+export function xRobotsTag(
+  env: Record<string, string | undefined>,
+  host: string,
+  pathname: string,
+) {
+  if (!isIndexable(env, host)) return "noindex, nofollow, noarchive";
+  return unindexedRobotsDirective(pathname);
+}
+
+export function robotsMetadata(indexable: boolean) {
+  return indexable
+    ? { index: true as const, follow: true as const }
+    : { index: false as const, follow: false as const };
 }
 
 export function serializeJsonLd(value: unknown) {

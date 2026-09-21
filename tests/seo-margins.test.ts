@@ -5,6 +5,9 @@ import {
   serializeJsonLd,
   absoluteUrl,
   productData,
+  publicHostFrom,
+  robotsMetadata,
+  xRobotsTag,
 } from "../src/lib/seo";
 import {
   contribution,
@@ -15,24 +18,107 @@ import { collections, collectionProducts } from "../src/lib/collections";
 import type { Product } from "../src/lib/types";
 import snapshot from "../src/data/catalog-snapshot.json" with { type: "json" };
 
-test("only an explicitly launched primary domain can be indexed", () => {
+test("the public storefront is indexable and staging hosts are not", () => {
   const primary = {
     SITE_URL: "https://hustlerdior.com",
     SITE_ROLE: "primary",
     SEARCH_INDEXING: "true",
   };
+  const prelaunch = {
+    SITE_URL: "https://hustlerdior.com",
+    SITE_ROLE: "preview",
+    SEARCH_INDEXING: "false",
+    CATALOG_SNAPSHOT_PREVIEW: "true",
+  };
   assert.equal(isIndexable(primary), true);
+  assert.equal(isIndexable(prelaunch), true);
+  assert.equal(
+    isIndexable(
+      {
+        SITE_URL: "http://localhost:3000",
+        SITE_ROLE: "preview",
+        SEARCH_INDEXING: "false",
+      },
+      "hustlerdior.com",
+    ),
+    true,
+  );
+  assert.equal(isIndexable(prelaunch, "10.0.0.4"), true);
   assert.equal(isIndexable({}), false);
   assert.equal(isIndexable({ ...primary, SITE_ROLE: "backup" }), false);
+  assert.equal(
+    isIndexable({ ...primary, SITE_ROLE: "backup" }, "hustlerdior.com"),
+    false,
+  );
   assert.equal(
     isIndexable({ ...primary, SITE_URL: "https://preview.example.com" }),
     false,
   );
+  assert.equal(isIndexable(primary, "preview.example.com"), false);
   assert.equal(
-    isIndexable({ ...primary, CATALOG_SNAPSHOT_PREVIEW: "true" }),
+    isIndexable(
+      {
+        SITE_URL: "http://localhost:3000",
+        SITE_ROLE: "preview",
+        SEARCH_INDEXING: "false",
+      },
+      "localhost:3000",
+    ),
     false,
   );
-  assert.equal(isIndexable({ ...primary, SEARCH_INDEXING: "false" }), false);
+  assert.deepEqual(robotsMetadata(true), { index: true, follow: true });
+  assert.equal(
+    JSON.stringify(robotsMetadata(true)).includes("noarchive"),
+    false,
+  );
+  for (const path of [
+    "/",
+    "/guides",
+    "/guides/what-is-hustler-dior",
+    "/guides/tactical-luxury-streetwear-positioning",
+    "/guides/veteran-owned-streetwear-brand-story",
+    "/guides/concrete-edit-90s-bootleg-graphic-tees",
+    "/help",
+    "/fit-guide",
+    "/about",
+    "/collections/tees",
+    "/products/skull-fx-graphic-tee-1",
+    "/world",
+    "/privacy",
+  ]) {
+    assert.equal(xRobotsTag(prelaunch, "hustlerdior.com", path), null, path);
+  }
+  assert.equal(
+    xRobotsTag(prelaunch, "hustlerdior.com", "/checkout"),
+    "noindex, nofollow",
+  );
+  assert.equal(
+    xRobotsTag(prelaunch, "hustlerdior.com", "/curated"),
+    "noindex, follow",
+  );
+  assert.equal(
+    xRobotsTag(
+      prelaunch,
+      "hustlerdior.com",
+      "/orders/11111111-1111-1111-1111-111111111111",
+    ),
+    "noindex, nofollow",
+  );
+  assert.equal(
+    xRobotsTag(prelaunch, "preview.example.com", "/"),
+    "noindex, nofollow, noarchive",
+  );
+  assert.equal(
+    publicHostFrom({
+      get: (name) =>
+        name === "x-forwarded-host"
+          ? "edge.example"
+          : name === "host"
+            ? "hustlerdior.com"
+            : null,
+    }),
+    "hustlerdior.com",
+  );
 });
 
 test("JSON-LD preserves merchant text while preventing closing-script injection", () => {
