@@ -1,0 +1,64 @@
+{
+  "mcpServers": {
+    "hostinger-hosting": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=hostinger-api-mcp@1.59.0",
+        "hostinger-hosting-mcp"
+      ],
+      "env": {
+        "HOSTINGER_API_TOKEN": "REPLACE_IN_YOUR_PRIVATE_CLIENT_SETTINGS",
+        "DEBUG": "false"
+      }
+    },
+    "hostinger-domains": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=hostinger-api-mcp@1.59.0",
+        "hostinger-domains-mcp"
+      ],
+      "env": {
+        "HOSTINGER_API_TOKEN": "REPLACE_IN_YOUR_PRIVATE_CLIENT_SETTINGS",
+        "DEBUG": "false"
+      }
+    },
+    "hostinger-dns": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=hostinger-api-mcp@1.59.0",
+        "hostinger-dns-mcp"
+      ],
+      "env": {
+        "HOSTINGER_API_TOKEN": "REPLACE_IN_YOUR_PRIVATE_CLIENT_SETTINGS",
+        "DEBUG": "false"
+      }
+    },
+    "hostinger-billing": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=hostinger-api-mcp@1.59.0",
+        "hostinger-billing-mcp"
+      ],
+      "env": {
+        "HOSTINGER_API_TOKEN": "REPLACE_IN_YOUR_PRIVATE_CLIENT_SETTINGS",
+        "DEBUG": "false"
+      }
+    },
+    "hostinger-reach": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "--package=hostinger-api-mcp@1.59.0",
+        "hostinger-reach-mcp"
+      ],
+      "env": {
+        "HOSTINGER_API_TOKEN": "REPLACE_IN_YOUR_PRIVATE_CLIENT_SETTINGS",
+        "DEBUG": "false"
+      }
+    }
+  }
+}
