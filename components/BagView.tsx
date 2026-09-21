@@ -12,6 +12,47 @@ type BagViewProps = {
   cancelled?: boolean;
 };
 
+type RecipientDraft = {
+  name: string;
+  email: string;
+  address1: string;
+  address2: string;
+  city: string;
+  state_code: string;
+  zip: string;
+};
+
+const emptyRecipient: RecipientDraft = {
+  name: "",
+  email: "",
+  address1: "",
+  address2: "",
+  city: "",
+  state_code: "",
+  zip: "",
+};
+
+function field(
+  recipient: RecipientDraft,
+  setRecipient: (next: RecipientDraft) => void,
+  key: keyof RecipientDraft,
+  label: string,
+  extra: Record<string, string> = {},
+) {
+  return createElement(
+    "label",
+    { className: "pdp__variant" },
+    createElement("span", null, label),
+    createElement("input", {
+      className: "bag__input",
+      value: recipient[key],
+      autoComplete: extra.autoComplete,
+      onChange: (event: { target: { value: string } }) =>
+        setRecipient({ ...recipient, [key]: event.target.value }),
+    }),
+  );
+}
+
 export default function BagView({
   checkoutConfigured,
   checkoutMessage,
@@ -20,9 +61,55 @@ export default function BagView({
   const { lines, setQuantity, remove, hydrated } = useCart();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [quote, setQuote] = useState<{ shippingCents: number | null; quoted: boolean } | null>(
+    null,
+  );
+  const [recipient, setRecipient] = useState<RecipientDraft>(emptyRecipient);
   const subtotal = bagSubtotal(lines);
   const currency = lines[0]?.currency || "USD";
   const hasMock = lines.some((line) => line.mock);
+
+  function packedRecipient() {
+    const filled = Object.entries(recipient).some(
+      ([key, value]) => key !== "address2" && value.trim(),
+    );
+    if (!filled) return undefined;
+    return { ...recipient, country_code: "US" };
+  }
+
+  function itemsPayload() {
+    return lines.map((line) => ({
+      productId: line.productId,
+      variantId: line.variantId,
+      quantity: line.quantity,
+    }));
+  }
+
+  async function requestQuote() {
+    setBusy(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/checkout/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: itemsPayload(), recipient: packedRecipient() }),
+      });
+      const payload = (await response.json()) as {
+        error?: string;
+        shippingCents?: number | null;
+        quoted?: boolean;
+      };
+      if (!response.ok) throw new Error(payload.error || "Could not quote delivery.");
+      setQuote({
+        shippingCents: payload.shippingCents ?? null,
+        quoted: Boolean(payload.quoted),
+      });
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not quote delivery.");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   async function checkout() {
     setBusy(true);
@@ -32,11 +119,8 @@ export default function BagView({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: lines.map((line) => ({
-            productId: line.productId,
-            variantId: line.variantId,
-            quantity: line.quantity,
-          })),
+          items: itemsPayload(),
+          recipient: packedRecipient(),
         }),
       });
       const payload = (await response.json()) as { url?: string; error?: string };
@@ -85,7 +169,7 @@ export default function BagView({
       ? createElement(
           "p",
           { className: "banner banner--warn" },
-          "Mock drops cannot be paid for. Connect PRINTFUL_API_KEY to sell live inventory.",
+          "Mock drops cannot be paid for. Connect PRINTFUL_API_KEY or PRINTFUL_API_TOKEN to sell live inventory.",
         )
       : null,
     createElement(
@@ -156,10 +240,48 @@ export default function BagView({
       createElement("span", null, "Subtotal"),
       createElement("strong", null, formatMoney(subtotal, currency)),
     ),
+    checkoutConfigured && !hasMock
+      ? createElement(
+          "div",
+          { className: "bag__form" },
+          createElement(
+            "p",
+            { className: "pdp__note" },
+            "US delivery quote (optional). Stripe still collects the shipping address.",
+          ),
+          field(recipient, setRecipient, "name", "Name", { autoComplete: "name" }),
+          field(recipient, setRecipient, "email", "Email", { autoComplete: "email" }),
+          field(recipient, setRecipient, "address1", "Address", { autoComplete: "address-line1" }),
+          field(recipient, setRecipient, "city", "City", { autoComplete: "address-level2" }),
+          field(recipient, setRecipient, "state_code", "State (e.g. NY)", {
+            autoComplete: "address-level1",
+          }),
+          field(recipient, setRecipient, "zip", "ZIP", { autoComplete: "postal-code" }),
+          quote
+            ? createElement(
+                "p",
+                { className: "pdp__note" },
+                quote.shippingCents == null
+                  ? "Shipping will be confirmed on Stripe."
+                  : `Standard shipping ${formatMoney(quote.shippingCents / 100, currency)}${quote.quoted ? " (Printful quote)" : ""}.`,
+              )
+            : null,
+          createElement(
+            "button",
+            {
+              type: "button",
+              className: "btn btn--ghost",
+              onClick: requestQuote,
+              disabled: busy,
+            },
+            busy ? "Quoting…" : "Get delivery quote",
+          ),
+        )
+      : null,
     createElement(
       "p",
       { className: "pdp__note" },
-      "Shipping and tax are calculated on Stripe Checkout. Prices are confirmed server-side from Printful — the bag preview is not the charge.",
+      "Prices are confirmed server-side from Printful — the bag preview is not the charge.",
     ),
     error ? createElement("p", { className: "banner banner--warn" }, error) : null,
     createElement(

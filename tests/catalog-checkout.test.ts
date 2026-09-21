@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { CheckoutParseError, parseCheckoutItems } from "../src/lib/checkout/parse.ts";
+import { CheckoutParseError, parseCheckoutItems, parseRecipient } from "../src/lib/checkout/parse.ts";
 import { reachedCatalogEnd } from "../src/lib/printful/paging.ts";
 
 describe("Printful catalog paging", () => {
@@ -74,6 +74,38 @@ describe("checkout item parser", () => {
       () =>
         parseCheckoutItems({
           items: [{ productId: "1", variantId: "9", quantity: 99 }],
+        }),
+      CheckoutParseError,
+    );
+  });
+});
+
+describe("shipping recipient parser", () => {
+  it("accepts a US address and rejects a bad ZIP", () => {
+    const recipient = parseRecipient({
+      recipient: {
+        name: "Swerve God",
+        email: "swerve@example.com",
+        address1: "100 Concrete Ave",
+        city: "Brooklyn",
+        state_code: "ny",
+        country_code: "US",
+        zip: "11201",
+      },
+    });
+    assert.equal(recipient?.state_code, "NY");
+    assert.throws(
+      () =>
+        parseRecipient({
+          recipient: {
+            name: "Swerve God",
+            email: "swerve@example.com",
+            address1: "100 Concrete Ave",
+            city: "Brooklyn",
+            state_code: "NY",
+            country_code: "US",
+            zip: "nope",
+          },
         }),
       CheckoutParseError,
     );

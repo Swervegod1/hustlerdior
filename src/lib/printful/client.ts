@@ -524,6 +524,40 @@ export class PrintfulClient {
     return payload.result ?? null;
   }
 
+  static async estimateShipping(
+    recipient: {
+      name: string;
+      address1: string;
+      address2?: string;
+      city: string;
+      state_code?: string;
+      country_code: string;
+      zip: string;
+    },
+    items: Array<{ sync_variant_id: number; quantity: number }>,
+  ): Promise<number | null> {
+    if (!PrintfulClient.isConfigured()) return null;
+    const response = await fetch(`${PrintfulClient.BASE_URL}/orders/estimate-costs`, {
+      method: "POST",
+      headers: PrintfulClient.authHeaders(),
+      body: JSON.stringify({
+        recipient,
+        shipping: "STANDARD",
+        items,
+        retail_costs: { currency: "USD" },
+      }),
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+    const payload = (await response.json()) as {
+      result?: { costs?: { shipping?: string | number } };
+    };
+    const raw = payload.result?.costs?.shipping;
+    const dollars = PrintfulClient.parsePrice(raw);
+    if (dollars <= 0) return 0;
+    return dollarsToCents(dollars);
+  }
+
   static formatPrice(product: PrintfulProduct): string {
     if (!product.price) {
       return "From collection";

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { createElement, Fragment } from "react";
-import ProductCard from "@/components/ProductCard";
+import CollectionGrid from "@/components/CollectionGrid";
 import { PrintfulClient } from "@/src/lib/printful/client";
 
 export const metadata: Metadata = {
@@ -57,20 +57,7 @@ export default async function CollectionPage() {
               catalog.message,
             )
           : null,
-        catalog.products.length === 0
-          ? createElement(
-              "div",
-              { className: "empty-state" },
-              createElement("strong", null, "No products yet"),
-              "Connect Printful or check mock fallback.",
-            )
-          : createElement(
-              "div",
-              { className: "product-grid" },
-              ...catalog.products.map((product) =>
-                createElement(ProductCard, { key: product.id, product }),
-              ),
-            ),
+        createElement(CollectionGrid, { products: catalog.products }),
       ),
     ),
   );

@@ -1,5 +1,9 @@
 import Stripe from "stripe";
-import { CheckoutParseError, parseCheckoutItems } from "@/src/lib/checkout/parse";
+import {
+  CheckoutParseError,
+  parseCheckoutItems,
+  parseRecipient,
+} from "@/src/lib/checkout/parse";
 import { PrintfulCheckoutError, PrintfulClient } from "@/src/lib/printful/client";
 import {
   checkoutAllowedCountries,
@@ -34,17 +38,30 @@ export async function POST(request: Request) {
 
   try {
     const items = parseCheckoutItems(body);
+    const recipient = parseRecipient(body);
     const lines = await PrintfulClient.resolveCheckoutLines(items);
     const stripe = stripeClient();
     const origin = siteOrigin(request);
-    const shippingCents = shippingAmountCents();
     const countries = checkoutAllowedCountries();
+
+    let shippingCents = shippingAmountCents();
+    if (recipient) {
+      const estimated = await PrintfulClient.estimateShipping(
+        recipient,
+        lines.map((line) => ({
+          sync_variant_id: Number(line.variantId),
+          quantity: line.quantity,
+        })),
+      );
+      if (estimated != null) shippingCents = estimated;
+    }
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/bag?cancelled=1`,
       customer_creation: "always",
+      customer_email: recipient?.email,
       billing_address_collection: "required",
       phone_number_collection: { enabled: true },
       shipping_address_collection: {

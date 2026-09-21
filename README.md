@@ -95,30 +95,37 @@ Flow: **Bag → `POST /api/checkout` → hosted Checkout Session → success URL
 - `GET /api/health` reports whether Printful and Stripe keys are present (boolean only).
 - Point Stripe webhooks (Dashboard → Developers → Webhooks) at `https://hustlerdior.com/api/webhooks/stripe` for `checkout.session.completed` if you want automatic Printful draft/order creation after a paid session.
 
-## Deploy on Hostinger (Node.js)
+## Deploy on Hostinger (Node.js zip)
 
-This app is a **Node.js** Next.js site (server components + `/api/*`). A static `public_html` upload cannot run checkout or hide Printful/Stripe secrets.
+This app is a **Node.js** Next.js site (server components + `/api/*`). A static `public_html` upload cannot run checkout or hide Printful/Stripe secrets. The live hustlerdior.com app is a Hostinger Node 22 zip deploy — rebuild from this repo and upload a **new** source zip (files at the archive root). Do not create a second website.
 
-1. Connect this GitHub repo (or upload a source ZIP with files at the archive root). Use the existing hustlerdior.com Node.js application — do not create a second site just to ship a catalog fix.
-2. Framework: **Next.js**. Node.js **20+** (22 or 24 preferred).
-3. Install: `npm ci` (or `npm install` if a lockfile is not used).
+1. From a clean checkout (no `node_modules`, `.next`, or `.env.local`):
+
+```bash
+zip -r Hustler-Dior-Hostinger-Source.zip . \
+  -x "node_modules/*" ".next/*" ".git/*" ".env" ".env.local" "*.pem"
+```
+
+2. In hPanel open the **existing** hustlerdior.com Node.js application. Upload the zip. Framework: **Next.js**. Node.js **22** (20+ works).
+3. Install: `npm ci` (lockfile is in the repo) or `npm install`.
 4. Build: `npm run build`
-5. Start: `npm start` (Hostinger Next.js preset is fine). If an entry file is required, Hostinger’s Next adapter typically uses the build output; do not point the process at a static export.
-6. In the Hostinger environment panel set at least:
-   - `PRINTFUL_API_KEY` — Printful token (**secret**)
-   - `PRINTFUL_STORE_ID=18749826`
-   - `STRIPE_SECRET_KEY` — Stripe secret (**secret**)
-   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` — set **before** the build so Next can inline it
+5. Start: `npm start`
+6. Environment — live Hostinger already uses `PRINTFUL_API_TOKEN`. Keep it; the client accepts **both** `PRINTFUL_API_TOKEN` and `PRINTFUL_API_KEY`:
+
+   - `PRINTFUL_API_TOKEN` or `PRINTFUL_API_KEY` — Printful token (**secret**)
+   - `PRINTFUL_STORE_ID` — keep the live store ID (this repo defaults to `18749826`)
+   - `STRIPE_SECRET_KEY` — Stripe secret (**secret**). When this is set, checkout is **on**. There is no “preparing” gate unless you set `CHECKOUT_ENABLED=false`.
+   - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` — set **before** the build
    - `SITE_URL=https://hustlerdior.com`
-   - `STRIPE_WEBHOOK_SECRET` — after the webhook endpoint is registered
+   - `STRIPE_WEBHOOK_SECRET` — after pointing Stripe at `https://hustlerdior.com/api/webhooks/stripe`
+
 7. Rebuild/redeploy after changing `NEXT_PUBLIC_*` variables.
 8. Confirm:
-   - `/collection` shows the full live drop count (not stuck at ~100)
+   - `/collection` drop count is the full live store (not a 100-piece preview). Use **Load more** to page the grid.
    - `/api/health` → `printful: true`, `stripe: true`
-   - `/bag` pay button is enabled when Stripe is configured
-9. Point domain DNS at Hostinger and keep HTTPS on. Set `SITE_URL` to the exact public origin Checkout will redirect to.
+   - `/bag` pay button is enabled; optional **Get delivery quote** uses Printful `estimate-costs` when a US address is filled.
 
-For static-export-only plans, use a Node runtime host instead. Catalog fetch and Checkout Sessions are server-side.
+Do not paste secrets into git, the zip, or the README. Catalog fetch and Checkout Sessions are server-side.
 
 ## License
 
