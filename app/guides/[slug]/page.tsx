@@ -6,7 +6,7 @@ import { GuideCatalog } from "@/src/lib/guides/content";
 import { GuideJsonLd } from "@/src/lib/guides/jsonLd";
 
 type GuidePageProps = {
-  params: Promise<{ slug: string }> | { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {

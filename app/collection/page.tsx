@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "Shop The Concrete Edit — Hustler Dior made-to-order drops.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function CollectionPage() {
   const catalog = await PrintfulClient.fetchCatalog();
 

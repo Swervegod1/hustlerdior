@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { createElement } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { CartProvider } from "@/components/CartProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -29,9 +30,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
     createElement(
       "body",
       null,
-      createElement(Header),
-      createElement("main", null, children),
-      createElement(Footer),
+      createElement(
+        CartProvider,
+        null,
+        createElement(Header),
+        createElement("main", null, children),
+        createElement(Footer),
+      ),
     ),
   );
 }

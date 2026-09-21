@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "files.cdn.printful.com",
+        hostname: "files.printful.com",
       },
     ],
   },

@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createElement } from "react";
+import AddToBag from "@/components/AddToBag";
 import { PrintfulClient } from "@/src/lib/printful/client";
+import { checkoutStatus } from "@/src/lib/stripe";
 
 type ProductPageProps = {
-  params: any;
+  params: Promise<{ id: string }>;
 };
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -33,6 +37,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const media = product.imageUrl
     ? createElement("img", { src: product.imageUrl, alt: product.name })
     : createElement("span", { className: "pdp__placeholder" }, "Concrete / Edit");
+  const checkout = checkoutStatus();
 
   return createElement(
     "div",
@@ -45,11 +50,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
       createElement("h1", null, product.name),
       createElement("p", { className: "pdp__price" }, PrintfulClient.formatPrice(product)),
       createElement("p", { className: "pdp__desc" }, product.description),
-      createElement(
-        "button",
-        { type: "button", className: "btn btn--solid", disabled: true },
-        "Add to bag — coming soon",
-      ),
+      createElement(AddToBag, {
+        product,
+        checkoutConfigured: checkout.configured,
+      }),
       createElement(
         "p",
         { className: "pdp__note" },

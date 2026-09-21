@@ -28,6 +28,7 @@ export class Footer {
           "div",
           { className: "site-footer__links" },
           createElement(Link, { href: "/collection" }, "Collection"),
+          createElement(Link, { href: "/bag" }, "Bag"),
           createElement(Link, { href: "/" }, "Home"),
         ),
       ),

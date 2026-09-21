@@ -3,6 +3,8 @@ import { createElement, Fragment } from "react";
 import ProductCard from "@/components/ProductCard";
 import { PrintfulClient } from "@/src/lib/printful/client";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const catalog = await PrintfulClient.fetchCatalog();
   const featured = catalog.products.slice(0, 4);

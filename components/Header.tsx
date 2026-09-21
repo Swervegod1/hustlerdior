@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createElement } from "react";
+import BagLink from "@/components/BagLink";
 
 export class Header {
   static render() {
@@ -21,6 +22,7 @@ export class Header {
           createElement(Link, { href: "/collection" }, "Shop"),
           createElement(Link, { href: "/guides" }, "Guides"),
           createElement(Link, { href: "/#manifesto" }, "Manifesto"),
+          createElement(BagLink),
           createElement(
             "a",
             { href: "https://www.printful.com", target: "_blank", rel: "noreferrer" },
