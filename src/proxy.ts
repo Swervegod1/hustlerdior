@@ -2,19 +2,22 @@ import { NextResponse, type NextRequest } from "next/server";
 import { guideSlugAction, unknownGuideHtml } from "@/lib/guide-route";
 import {
   CANONICAL_ORIGIN,
+  isProductionHost,
   normalizeHost,
   publicHostFrom,
   xRobotsTag,
 } from "@/lib/seo";
 
 function publicOrigin(request: NextRequest, hostname: string) {
-  const proto = (
+  const forwarded = (
     request.headers.get("x-forwarded-proto") ||
     request.nextUrl.protocol.replace(":", "") ||
     "https"
   )
     .split(",")[0]
     .trim();
+  // TLS is terminated in front of the Node process, which often sees plain HTTP.
+  const proto = isProductionHost(hostname) ? "https" : forwarded;
   const candidates = [
     request.headers.get("x-forwarded-host"),
     request.headers.get("host"),
