@@ -1,17 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import helpFaq from "../src/data/faq-help.json" with { type: "json" };
 import fitGuideFaq from "../src/data/faq-fit-guide.json" with { type: "json" };
-import {
-  GUIDE_SLUGS,
-  listedGuideFiles,
-  loadGuide,
-  loadGuides,
-} from "../src/lib/guides";
+import { GUIDE_SLUGS, loadGuide, loadGuides } from "../src/lib/guides";
 import { parseFrontmatter, siteRelativeHref } from "../src/lib/guide-parse";
 import { markdownToReact } from "../src/lib/markdown";
 import { absoluteUrl } from "../src/lib/seo";
@@ -28,7 +23,11 @@ const EXPECTED = {
 } as const;
 
 test("four published guides parse from MDX with matching slugs and H1s", () => {
-  assert.deepEqual([...listedGuideFiles()].sort(), [...GUIDE_SLUGS].sort());
+  const listed = readdirSync(join(process.cwd(), "content", "guides"))
+    .filter((name) => name.endsWith(".mdx"))
+    .map((name) => name.replace(/\.mdx$/, ""))
+    .sort();
+  assert.deepEqual(listed, [...GUIDE_SLUGS].sort());
   const guides = loadGuides();
   assert.equal(guides.length, 4);
   for (const slug of GUIDE_SLUGS) {
