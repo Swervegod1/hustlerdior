@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { productIndex } from "@/lib/server/catalog";
 import { connection } from "next/server";
+import { requestPublicHost } from "@/lib/request-host";
 import { absoluteUrl, isIndexable } from "@/lib/seo";
 import { GUIDE_SLUGS } from "@/lib/guides";
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/lib/collections";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   await connection();
-  if (!isIndexable()) return [];
+  if (!isIndexable(process.env, await requestPublicHost())) return [];
   const index = await productIndex();
   return [
     ...[
@@ -21,11 +22,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       "/help",
       "/privacy",
       "/guides",
-    ].map(
-      (path) => ({
-        url: absoluteUrl(path),
-      }),
-    ),
+    ].map((path) => ({
+      url: absoluteUrl(path),
+    })),
     ...collections.flatMap((collection) => {
       const pages = Math.max(
         1,

@@ -7,6 +7,7 @@ import { createElement } from "react";
 import helpFaq from "../src/data/faq-help.json" with { type: "json" };
 import fitGuideFaq from "../src/data/faq-fit-guide.json" with { type: "json" };
 import { GUIDE_SLUGS, loadGuide, loadGuides } from "../src/lib/guides";
+import { guideSlugAction, unknownGuideHtml } from "../src/lib/guide-route";
 import { parseFrontmatter, siteRelativeHref } from "../src/lib/guide-parse";
 import { markdownToReact } from "../src/lib/markdown";
 import { absoluteUrl } from "../src/lib/seo";
@@ -59,7 +60,9 @@ test("guide markdown renders headings, internal links, and no extra H1", () => {
     "1. First",
     "2. Second",
   ].join("\n");
-  const html = renderToStaticMarkup(createElement("div", null, markdownToReact(source)));
+  const html = renderToStaticMarkup(
+    createElement("div", null, markdownToReact(source)),
+  );
   assert.equal(html.includes("<h1"), false);
   assert.match(html, /<h2>Direct answer<\/h2>/);
   assert.match(html, /href="\/collections\/tees"/);
@@ -78,7 +81,10 @@ test("published guide bodies render a visible article without claiming live chec
     assert.equal(html.includes("<h1"), false);
     assert.doesNotMatch(html, /checkout is live/i);
     assert.doesNotMatch(html, /payment works/i);
-    assert.doesNotMatch(html, /\b(sergeant|lieutenant|captain|colonel|major)\b/i);
+    assert.doesNotMatch(
+      html,
+      /\b(sergeant|lieutenant|captain|colonel|major)\b/i,
+    );
     assert.match(html, /Chase W\. Stemple/);
     assert.match(html, /Swerve God/);
   }
@@ -102,6 +108,27 @@ test("frontmatter parser and canonical helper stay site-relative", () => {
     ),
     true,
   );
+});
+
+test("unknown guide slugs 404 and the short alias redirects", () => {
+  assert.deepEqual(
+    guideSlugAction("/guides/tactical-luxury-streetwear-positioning"),
+    {
+      kind: "pass",
+    },
+  );
+  assert.deepEqual(guideSlugAction("/guides"), { kind: "pass" });
+  assert.deepEqual(guideSlugAction("/guides/hustler-dior"), {
+    kind: "redirect",
+    pathname: "/guides/what-is-hustler-dior",
+  });
+  assert.deepEqual(guideSlugAction("/guides/not-a-real-guide"), {
+    kind: "not-found",
+  });
+  const html = unknownGuideHtml();
+  assert.match(html, /<title>Page not found \| Hustler Dior<\/title>/);
+  assert.equal(html.includes("Independent Streetwear"), false);
+  assert.match(html, /noindex, nofollow/);
 });
 
 test("help and fit-guide FAQ drop-ins are FAQPage graphs", () => {

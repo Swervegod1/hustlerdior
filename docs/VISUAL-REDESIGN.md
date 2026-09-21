@@ -46,7 +46,7 @@ The next required decision is approval to reassign hustlerdior.com from the Buil
 
 After Hostinger confirms the new assignment and HTTPS:
 
-1. Set `SITE_URL=https://hustlerdior.com`, `SITE_ROLE=primary`, `SEARCH_INDEXING=true` and `CATALOG_SNAPSHOT_PREVIEW=false` in the new primary runtime, preserving the server-only Printful/session values.
+1. Set `SITE_URL=https://hustlerdior.com` and `CATALOG_SNAPSHOT_PREVIEW=false` in the new primary runtime, preserving the server-only Printful/session values. The apex host is indexable without `SEARCH_INDEXING=true`. Keep `SITE_ROLE=backup` only on recovery instances.
 2. Keep `CHECKOUT_ENABLED=false` and `TRYON_ENABLED=false` until their existing operational prerequisites are fulfilled.
 3. Verify the apex and www redirects, canonical URLs, robots/sitemap, product API, image loading, variant selection and bag actions on the primary address.
 4. Keep the temporary preview and recovery instances noindex. Do not enable search indexing on the temporary domain as a substitute for primary-domain activation.

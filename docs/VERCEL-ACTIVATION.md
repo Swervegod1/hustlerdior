@@ -16,7 +16,7 @@ Import this branch into the selected commercial Vercel team as a Next.js project
 | --- | --- |
 | `SITE_URL` | `https://hustlerdior.com`; exact origin used for request verification and payment return URLs |
 | `SITE_ROLE` | `primary` only on the primary production domain |
-| `SEARCH_INDEXING` | `true` only on the primary production domain |
+| `SEARCH_INDEXING` | Not required for `hustlerdior.com`. Other public hostnames stay noindex |
 | `PRINTFUL_API_TOKEN` | Private Printful token for the source store. `PRINTFUL_API_KEY` is accepted if this is unset. |
 | `PRINTFUL_STORE_ID` | Store actually authorized by the token; retain the verified production value |
 | `DATABASE_URL` | Optional pooled Postgres URL. Hostinger zip deploys can run without it. |
@@ -29,7 +29,7 @@ Import this branch into the selected commercial Vercel team as a Next.js project
 
 This application uses neither NextAuth nor client-side Stripe Elements. `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_SITE_URL`, and a publishable Stripe key do not unlock checkout. The Printful variable is `PRINTFUL_API_TOKEN`; `PRINTFUL_API_KEY` is an accepted alias for Hostinger hosts that already use that name.
 
-Preview deployments must have separate test Stripe credentials and a development database branch. Set `SITE_ROLE=preview`, `SEARCH_INDEXING=false`, and leave live checkout disabled. Never copy production secrets into public files, build artifacts, or pull request descriptions.
+Preview deployments must have separate test Stripe credentials and a development database branch. Their hostname is not `hustlerdior.com`, so they stay noindex. Leave live checkout disabled. Never copy production secrets into public files, build artifacts, or pull request descriptions.
 
 ## Database
 

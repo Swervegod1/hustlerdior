@@ -13,8 +13,8 @@ Implemented September 13, 2026. The source is prepared for Hostinger; it has not
 | Structured data      | Organization, WebSite, BreadcrumbList, CollectionPage/ItemList, ProductGroup and actual Product variants                                                 |
 | Variant links        | Each real variant has a URL that preselects that color/size; the product page remains canonical                                                          |
 | Sitemap              | Main pages, collection pagination and every synced product URL; lightweight Printful index avoids fetching all variant details just to build the sitemap |
-| Indexing controls    | Explicit launch flag; previews, snapshots and backup instances receive noindex metadata and response headers                                             |
-| Domain consistency   | Canonical URLs use https://hustlerdior.com; www requests redirect to the apex when the application is the primary site                                   |
+| Indexing controls    | Public `hustlerdior.com` pages are `index, follow`. Other public hostnames, backups, checkout, order status, and `/curated` stay noindex                  |
+| Domain consistency   | Canonical URLs use https://hustlerdior.com; www requests redirect to the apex                                                                           |
 | Ownership            | Optional GOOGLE_SITE_VERIFICATION for a Search Console verification token                                                                                |
 
 The homepage and footer link to these collections. Collection text explains an actual browsing or fit decision. No invented reviews, star ratings, delivery promises, third-party brand stock, city pages or claimed sales counts have been added.
@@ -39,8 +39,8 @@ ProductGroup identifies actual variants in the catalog, following the [product v
 
 1. Deploy the source as a Hostinger Node.js application. Verify product images, the mobile variant selector and bag, current pricing, and actual HTTPS/domain routing.
 2. Resolve the loss-making and unavailable variants identified in the pricing audit. Finish the payment/order integration and publish real shipping/returns/contact information before selling.
-3. Keep SITE_ROLE=preview and SEARCH_INDEXING=false during setup. For the reviewed primary domain, set SITE_URL=https://hustlerdior.com, SITE_ROLE=primary, SEARCH_INDEXING=true and CATALOG_SNAPSHOT_PREVIEW=false. Rebuild/redeploy after configuration changes.
-4. Verify the deployed primary homepage returns HTTP 200 without X-Robots-Tag: noindex, and that its robots meta allows indexing. Check /robots.txt and /sitemap.xml. Preview/backup URLs must still return noindex headers. A host mismatch intentionally prevents indexing.
+3. The public host https://hustlerdior.com is indexable by default (`index, follow`, no `X-Robots-Tag`). Set `SITE_URL=https://hustlerdior.com` so checkout and an internal proxy host still resolve as production. `SITE_ROLE=backup` and any other public hostname stay noindex. A leftover `SEARCH_INDEXING=false` or `SITE_ROLE=preview` does not hide the canonical host.
+4. Verify the deployed primary homepage returns HTTP 200 without `X-Robots-Tag: noindex`, and that its robots meta is `index, follow`. Check `/robots.txt` and `/sitemap.xml`. Preview and backup hostnames must still return noindex headers.
 5. Add the genuine Search Console ownership token or complete DNS verification in the account. Submit https://hustlerdior.com/sitemap.xml and inspect representative product and collection URLs. Account access and a verified domain are required; this was not performed from the blocked Hostinger session.
 6. After checkout opens, validate completed merchant markup against the visible page and connect an accurate Merchant Center feed if wanted. Keep price, stock, shipping and landing-page values consistent.
 
