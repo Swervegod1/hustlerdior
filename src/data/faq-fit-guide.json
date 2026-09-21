@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I start with a piece I already wear?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Lay a favorite tee or hoodie flat without stretching it. Note the width across the chest and the length from the shoulder to the hem. These garment measurements describe a fit you already know; they are different from measurements taken around your body. A size letter alone does not establish the same fit across different garments. Before ordering, compare those measurements with the size chart for the exact garment. Product-specific measurement charts are still being prepared for this storefront."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I choose a silhouette (oversized, fitted, cropped, or unisex)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oversized: compare shoulder position, chest room and hem length. Sizing up a regular garment may change the length without recreating an oversized cut. Fitted: compare chest and sleeve room; compare a garment you already like rather than assuming your usual size will fit the same way. Cropped: compare shoulder-to-hem length and where that hem meets your waistband. Unisex: compare the actual cut and measurements—unisex describes the intended audience; it is not a measurement standard."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my size disappear when I change color?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each color and size combination is a separate variant. Some combinations can be unavailable even when another color is available. Choose a color first, then select one of the enabled sizes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do larger sizes cost more?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Some pieces have different prices by size. Selecting a size shows the price for that exact variant. A “From” price on a collection card is the lowest current price among its available variants."
+      }
+    }
+  ]
+}

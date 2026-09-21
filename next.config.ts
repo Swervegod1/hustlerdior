@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
+  outputFileTracingIncludes: {
+    "/guides": ["./content/guides/**/*"],
+    "/guides/[slug]": ["./content/guides/**/*"],
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "files.cdn.printful.com" },

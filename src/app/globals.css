@@ -2070,6 +2070,35 @@ button {
 .reading-panel a:hover {
   color: var(--safety);
 }
+.reading-panel ul,
+.reading-panel ol {
+  margin: 0 0 22px;
+  padding-left: 1.3em;
+  color: #bfc1b7;
+  font-size: 16px;
+  line-height: 1.9;
+}
+.reading-panel li {
+  margin: 0 0 8px;
+}
+.reading-panel hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 32px 0;
+}
+.reading-panel strong {
+  color: var(--paper);
+  font-weight: 500;
+}
+.reading-panel em {
+  font-style: italic;
+}
+.guide-index-item {
+  margin: 0 0 42px;
+}
+.guide-index-item h2 {
+  margin-top: 0;
+}
 .reading-page .reading-panel {
   margin-top: 0;
 }

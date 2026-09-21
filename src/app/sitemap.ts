@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { productIndex } from "@/lib/server/catalog";
 import { connection } from "next/server";
 import { absoluteUrl, isIndexable } from "@/lib/seo";
+import { GUIDE_SLUGS } from "@/lib/guides";
 import {
   collections,
   collectionProducts,
@@ -12,7 +13,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!isIndexable()) return [];
   const index = await productIndex();
   return [
-    ...["/", "/about", "/world", "/fit-guide", "/help", "/privacy"].map(
+    ...[
+      "/",
+      "/about",
+      "/world",
+      "/fit-guide",
+      "/help",
+      "/privacy",
+      "/guides",
+    ].map(
       (path) => ({
         url: absoluteUrl(path),
       }),
@@ -30,6 +39,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ),
       }));
     }),
+    ...GUIDE_SLUGS.map((slug) => ({
+      url: absoluteUrl(`/guides/${slug}`),
+    })),
     ...index.map((p) => ({ url: absoluteUrl(`/products/${p.slug}`) })),
   ];
 }

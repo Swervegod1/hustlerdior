@@ -23,6 +23,7 @@ await build({
   packages: "external",
   conditions: ["react-server"],
 });
+await cp("content", ".next/standalone/content", { recursive: true });
 await cp("database", ".next/standalone/database", { recursive: true });
 await cp("scripts/migrate.mjs", ".next/standalone/migrate.mjs");
 console.log(

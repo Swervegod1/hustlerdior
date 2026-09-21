@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is online checkout open?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Payment is not currently collected through this storefront. You can explore pieces, choose variants and save a bag on this device. Delivery quotes and secure payment unlock after Stripe runtime keys are set on the host. No test or live charges are created from missing keys."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are the pieces produced?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The current collection is set up for made-to-order production through Printful. An available variant means the catalog currently lists that combination as available; it does not mean a finished garment is sitting in a Hustler Dior warehouse."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I choose a size and color?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Open a piece, choose a color, then select an available size. The displayed price follows that combination. Read the fit guide before deciding on a silhouette."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are new pieces ordered?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Extended Edit opens with the newest Shopify creation dates first. The main collection follows Printful’s current store listing; that API does not provide creation dates, so its ordering does not establish a garment’s original release date."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens to my bag?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your bag is saved in this browser on this device. Clearing browser storage removes it. It does not automatically transfer to another device, and adding a piece does not reserve inventory."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When will shipping and returns be available?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Delivery quotes and the store’s shipping and returns policies appear with checkout once Stripe is configured. We are not promising a delivery date or a free-shipping threshold while payment is unavailable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I find women’s and men’s streetwear here?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Browse the women’s edit or the men’s edit. Both include unisex pieces alongside the catalog’s gender-specific styles."
+      }
+    }
+  ]
+}
