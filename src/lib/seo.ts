@@ -62,9 +62,17 @@ export function isIndexable(
   return siteOrigin(env) === CANONICAL_ORIGIN;
 }
 
-/** Checkout, order status, catalog preview, and API routes stay out of the index. */
-export function isUnindexedPath(pathname: string) {
-  return /^\/(api|checkout|orders|curated)(\/|$)/.test(pathname);
+/**
+ * Non-public routes stay out of the index even on the production host.
+ * Curated is a catalog preview: noindex, but its links may be followed.
+ * Checkout and order status are private. API routes are not documents.
+ */
+export function unindexedRobotsDirective(pathname: string) {
+  if (/^\/(api|checkout|orders)(\/|$)/.test(pathname)) {
+    return "noindex, nofollow";
+  }
+  if (/^\/curated(\/|$)/.test(pathname)) return "noindex, follow";
+  return null;
 }
 
 export function xRobotsTag(
@@ -72,10 +80,8 @@ export function xRobotsTag(
   host: string,
   pathname: string,
 ) {
-  if (!isIndexable(env, host) || isUnindexedPath(pathname)) {
-    return "noindex, nofollow, noarchive";
-  }
-  return null;
+  if (!isIndexable(env, host)) return "noindex, nofollow, noarchive";
+  return unindexedRobotsDirective(pathname);
 }
 
 export function robotsMetadata(indexable: boolean) {

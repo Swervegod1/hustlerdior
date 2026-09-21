@@ -71,10 +71,38 @@ test("the public storefront is indexable and staging hosts are not", () => {
     JSON.stringify(robotsMetadata(true)).includes("noarchive"),
     false,
   );
-  assert.equal(xRobotsTag(prelaunch, "hustlerdior.com", "/guides"), null);
+  for (const path of [
+    "/",
+    "/guides",
+    "/guides/what-is-hustler-dior",
+    "/guides/tactical-luxury-streetwear-positioning",
+    "/guides/veteran-owned-streetwear-brand-story",
+    "/guides/concrete-edit-90s-bootleg-graphic-tees",
+    "/help",
+    "/fit-guide",
+    "/about",
+    "/collections/tees",
+    "/products/skull-fx-graphic-tee-1",
+    "/world",
+    "/privacy",
+  ]) {
+    assert.equal(xRobotsTag(prelaunch, "hustlerdior.com", path), null, path);
+  }
   assert.equal(
     xRobotsTag(prelaunch, "hustlerdior.com", "/checkout"),
-    "noindex, nofollow, noarchive",
+    "noindex, nofollow",
+  );
+  assert.equal(
+    xRobotsTag(prelaunch, "hustlerdior.com", "/curated"),
+    "noindex, follow",
+  );
+  assert.equal(
+    xRobotsTag(
+      prelaunch,
+      "hustlerdior.com",
+      "/orders/11111111-1111-1111-1111-111111111111",
+    ),
+    "noindex, nofollow",
   );
   assert.equal(
     xRobotsTag(prelaunch, "preview.example.com", "/"),
