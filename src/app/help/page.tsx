@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
+import JsonLd from "@/components/JsonLd";
 import ReadingPage from "@/components/ReadingPage";
+import helpFaq from "@/data/faq-help.json";
 import { absoluteUrl } from "@/lib/seo";
 import { checkoutConfigured } from "@/lib/env";
 
@@ -94,6 +96,7 @@ export default async function Help() {
         <Link href="/collections/mens-streetwear">men’s edit</Link>. Both
         include unisex pieces alongside the catalog’s gender-specific styles.
       </p>
+      <JsonLd data={helpFaq} />
     </ReadingPage>
   );
 }

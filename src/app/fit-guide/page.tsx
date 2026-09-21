@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import JsonLd from "@/components/JsonLd";
 import ReadingPage from "@/components/ReadingPage";
+import fitGuideFaq from "@/data/faq-fit-guide.json";
 import { absoluteUrl } from "@/lib/seo";
 
 const description =
@@ -94,6 +96,7 @@ export default function FitGuide() {
       <p>
         <Link href="/help">Read ordering information</Link>
       </p>
+      <JsonLd data={fitGuideFaq} />
     </ReadingPage>
   );
 }
