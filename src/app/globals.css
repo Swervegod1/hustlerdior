@@ -1093,7 +1093,8 @@ button {
   padding: 12vh 8%;
   min-height: 70vh;
 }
-.status-page h1 {
+.status-page h1,
+.status-page .status-display {
   font-family: var(--font-display);
   font-weight: 400;
   line-height: 1.05;

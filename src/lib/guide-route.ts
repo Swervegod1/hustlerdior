@@ -3,6 +3,7 @@ export const GUIDE_SLUGS = [
   "tactical-luxury-streetwear-positioning",
   "veteran-owned-streetwear-brand-story",
   "concrete-edit-90s-bootleg-graphic-tees",
+  "how-to-wash-graphic-tees",
 ] as const;
 
 export type GuideSlug = (typeof GUIDE_SLUGS)[number];
