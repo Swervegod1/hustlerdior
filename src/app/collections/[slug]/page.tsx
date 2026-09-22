@@ -8,7 +8,7 @@ import {
   COLLECTION_PAGE_SIZE,
 } from "@/lib/collections";
 import { productIndex, productsForPage } from "@/lib/server/catalog";
-import { absoluteUrl, breadcrumbData } from "@/lib/seo";
+import { absoluteUrl, breadcrumbData, listingProductData } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import CollectionGrid from "@/components/CollectionGrid";
 
@@ -160,6 +160,7 @@ export default async function CollectionPage(props: Props) {
               position: offset + i + 1,
               name: p.name,
               url: absoluteUrl(`/products/${p.slug}`),
+              item: listingProductData(p),
             })),
           },
         }}
