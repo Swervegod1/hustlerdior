@@ -5,7 +5,7 @@ import { loadGuides } from "@/lib/guides";
 import { absoluteUrl } from "@/lib/seo";
 
 const description =
-  "Brand and collection guides from Hustler Dior: the Concrete Edit, tactical luxury positioning, veteran-owned ownership, and 90s bootleg graphic tees.";
+  "Brand, collection, and care guides from Hustler Dior: the Concrete Edit, tactical luxury positioning, veteran-owned ownership, 90s bootleg graphic tees, and how to wash printed tees.";
 
 export const metadata: Metadata = {
   title: "Guides",

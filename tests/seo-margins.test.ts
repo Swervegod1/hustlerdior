@@ -79,6 +79,7 @@ test("the public storefront is indexable and staging hosts are not", () => {
     "/guides/tactical-luxury-streetwear-positioning",
     "/guides/veteran-owned-streetwear-brand-story",
     "/guides/concrete-edit-90s-bootleg-graphic-tees",
+    "/guides/how-to-wash-graphic-tees",
     "/help",
     "/fit-guide",
     "/about",
