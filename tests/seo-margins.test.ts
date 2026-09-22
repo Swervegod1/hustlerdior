@@ -4,6 +4,7 @@ import {
   isIndexable,
   serializeJsonLd,
   absoluteUrl,
+  listingProductData,
   productData,
   publicHostFrom,
   robotsMetadata,
@@ -130,20 +131,129 @@ test("JSON-LD preserves merchant text while preventing closing-script injection"
   assert.throws(() => absoluteUrl("https://other.example.com"));
 });
 
-test("product variants have exact deep links and no fabricated purchasable offers", () => {
+function centsFromSchemaPrice(price: string) {
+  assert.match(price, /^\d+\.\d{2}$/);
+  return Math.round(Number(price) * 100);
+}
+
+test("product variants have exact deep links and catalog-backed offers", () => {
   const p = snapshot.products[0] as Product;
+  assert.ok(p.variants.length > 1);
   const structured = productData(p);
+  assert.equal(structured.name, p.name);
+  assert.equal(structured.url, absoluteUrl(`/products/${p.slug}`));
+  assert.equal(structured.brand.name, "Hustler Dior");
+  assert.deepEqual(structured.image, p.image ? [p.image] : undefined);
   assert.equal(structured.hasVariant.length, p.variants.length);
-  assert.ok(
-    structured.hasVariant.every((v, i) =>
-      v.url.endsWith(`?variant=${p.variants[i].id}`),
-    ),
+  assert.equal(structured.offers?.["@type"], "AggregateOffer");
+  if (structured.offers?.["@type"] !== "AggregateOffer") return;
+  const prices = p.variants.map((variant) => variant.priceCents);
+  assert.equal(
+    centsFromSchemaPrice(structured.offers.lowPrice),
+    Math.min(...prices),
   );
-  assert.equal(JSON.stringify(structured).includes('"offers"'), false);
+  assert.equal(
+    centsFromSchemaPrice(structured.offers.highPrice),
+    Math.max(...prices),
+  );
+  assert.equal(structured.offers.priceCurrency, p.currency);
+  assert.equal(structured.offers.offerCount, p.variants.length);
+  assert.ok(
+    structured.hasVariant.every((variant, i) => {
+      const source = p.variants[i];
+      return (
+        variant.url.endsWith(`?variant=${source.id}`) &&
+        variant.name === source.name &&
+        variant.brand.name === "Hustler Dior" &&
+        variant.offers?.["@type"] === "Offer" &&
+        variant.offers.priceCurrency === source.currency &&
+        centsFromSchemaPrice(variant.offers.price) === source.priceCents &&
+        (source.image
+          ? variant.image?.[0] === source.image
+          : variant.image === undefined)
+      );
+    }),
+  );
   assert.equal(
     new Set(structured.hasVariant.map((v) => v.sku)).size,
     p.variants.length,
   );
+  const listing = listingProductData(p);
+  assert.equal(listing["@type"], "Product");
+  assert.equal(listing.offers?.["@type"], "AggregateOffer");
+  if (listing.offers?.["@type"] === "AggregateOffer") {
+    assert.equal(
+      centsFromSchemaPrice(listing.offers.lowPrice),
+      Math.min(...prices),
+    );
+    assert.equal(listing.offers.priceCurrency, p.currency);
+  }
+});
+
+test("offer availability follows catalog stock and never invents InStock", () => {
+  const p = snapshot.products[0] as Product;
+  const [first, second] = p.variants;
+  assert.ok(first && second);
+  const cases = [
+    ["available", "https://schema.org/InStock"],
+    ["out_of_stock", "https://schema.org/OutOfStock"],
+    ["discontinued", "https://schema.org/OutOfStock"],
+  ] as const;
+  for (const [stock, availability] of cases) {
+    const structured = productData({
+      ...p,
+      variants: [{ ...first, stock }],
+    });
+    assert.equal(structured.offers?.["@type"], "Offer");
+    assert.equal(structured.offers?.availability, availability);
+    assert.equal(structured.hasVariant[0].offers?.availability, availability);
+    if (structured.offers?.["@type"] === "Offer") {
+      assert.equal(
+        centsFromSchemaPrice(structured.offers.price),
+        first.priceCents,
+      );
+      assert.equal(structured.offers.priceCurrency, first.currency);
+    }
+  }
+  const unknown = productData({
+    ...p,
+    image: null,
+    variants: [{ ...first, stock: "unknown", image: null }],
+  });
+  assert.equal(unknown.image, undefined);
+  assert.equal(unknown.hasVariant[0].image, undefined);
+  assert.equal(unknown.offers?.availability, undefined);
+  assert.equal(unknown.hasVariant[0].offers?.availability, undefined);
+  assert.equal(JSON.stringify(unknown).includes("InStock"), false);
+  assert.equal(JSON.stringify(unknown).includes("OutOfStock"), false);
+  const mixed = productData({
+    ...p,
+    variants: [
+      { ...first, stock: "out_of_stock" },
+      { ...second, stock: "unknown" },
+    ],
+  });
+  assert.equal(mixed.offers?.["@type"], "AggregateOffer");
+  assert.equal(mixed.offers?.availability, undefined);
+  assert.equal(
+    mixed.hasVariant[0].offers?.availability,
+    "https://schema.org/OutOfStock",
+  );
+  assert.equal(mixed.hasVariant[1].offers?.availability, undefined);
+  assert.equal(JSON.stringify(mixed).includes("InStock"), false);
+  const unsellable = productData({
+    ...p,
+    variants: [
+      { ...first, priceCents: 0 },
+      { ...second, currency: "usd" },
+    ],
+  });
+  assert.equal(unsellable.offers, undefined);
+  assert.equal(
+    unsellable.hasVariant.every((variant) => variant.offers === undefined),
+    true,
+  );
+  assert.equal(JSON.stringify(unsellable).includes("InStock"), false);
 });
 
 test("adult clothing collections exclude kids and non-clothing accessories", () => {
