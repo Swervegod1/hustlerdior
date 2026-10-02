@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import JsonLd from "@/components/JsonLd";
 import ReadingPage from "@/components/ReadingPage";
+import { guideStructuredData } from "@/lib/guide-schema";
 import { GUIDE_SLUGS, loadGuide } from "@/lib/guides";
 import { markdownToReact } from "@/lib/markdown";
 import { absoluteUrl } from "@/lib/seo";
@@ -44,6 +46,7 @@ export default async function GuidePage({ params }: Props) {
       parent={{ name: "Guides", path: "/guides" }}
     >
       {markdownToReact(guide.body)}
+      <JsonLd data={guideStructuredData(guide)} />
       <Link className="editorial-link" href="/collections/tees">
         EXPLORE TEES & TOPS ↗
       </Link>

@@ -9,6 +9,7 @@ import fitGuideFaq from "../src/data/faq-fit-guide.json" with { type: "json" };
 import { GUIDE_SLUGS, loadGuide, loadGuides } from "../src/lib/guides";
 import { guideSlugAction, unknownGuideHtml } from "../src/lib/guide-route";
 import { parseFrontmatter, siteRelativeHref } from "../src/lib/guide-parse";
+import { guideFaqs, guideStructuredData } from "../src/lib/guide-schema";
 import { markdownToReact } from "../src/lib/markdown";
 import { absoluteUrl } from "../src/lib/seo";
 import ReadingPage from "../src/components/ReadingPage";
@@ -27,6 +28,12 @@ const EXPECTED = {
     "The Concrete Edit: 90s Bootleg Energy for Graphic Tees (Taxonomy + Editorial)",
   "how-to-wash-graphic-tees":
     "How to Wash Graphic Streetwear Tees Without Cracking the Print",
+  "garment-dyed-vs-pigment-dyed-streetwear-tees":
+    "Garment-Dyed vs Pigment-Dyed Streetwear Tees: What the Soft Color Means",
+  "graphic-tee-color-combinations":
+    "Graphic Tee Color Combinations: Let One Color Lead",
+  "how-to-remove-lint-and-pilling-from-hoodies":
+    "How to Remove Lint and Pilling from Hoodies Without Damaging the Fabric",
 } as const;
 
 test("published guides parse from MDX with matching slugs and H1s", () => {
@@ -194,6 +201,68 @@ test("wash guide is one indexable article with shop and help links", async () =>
     meta.openGraph?.url,
     absoluteUrl("/guides/how-to-wash-graphic-tees"),
   );
+});
+
+test("new care and color guides are indexable articles with FAQ JSON-LD", async () => {
+  const cases = [
+    {
+      slug: "garment-dyed-vs-pigment-dyed-streetwear-tees",
+      title: "Garment-Dyed vs Pigment-Dyed Tees | Hustler Dior",
+      sibling: "/guides/how-to-remove-lint-and-pilling-from-hoodies",
+    },
+    {
+      slug: "graphic-tee-color-combinations",
+      title: "Graphic Tee Color Combinations That Work | Hustler Dior",
+      sibling: null,
+    },
+    {
+      slug: "how-to-remove-lint-and-pilling-from-hoodies",
+      title: "Remove Lint & Pilling From Hoodies Safely | Hustler Dior",
+      sibling: "/guides/garment-dyed-vs-pigment-dyed-streetwear-tees",
+    },
+  ] as const;
+  for (const item of cases) {
+    const guide = loadGuide(item.slug);
+    assert.ok(guide);
+    assert.equal(guide.title, item.title);
+    assert.doesNotMatch(guide.title, /\| Hustler Dior \| Hustler Dior/);
+    assert.doesNotMatch(
+      guide.body,
+      /Meta title|Meta description|Canonical \(when live\)|status:\s*draft|softCta/i,
+    );
+    assert.doesNotMatch(guide.body, /in-house|DTF manufacturing|wash-test/i);
+    assert.doesNotMatch(guide.body, /^# /m);
+    if (item.slug !== "graphic-tee-color-combinations") {
+      assert.match(guide.body, /\/guides\/how-to-wash-graphic-tees/);
+    }
+    if (item.sibling) assert.match(guide.body, new RegExp(item.sibling));
+    const html = renderToStaticMarkup(
+      createElement("article", null, markdownToReact(guide.body)),
+    );
+    assert.equal(html.includes("<h1"), false);
+    if (item.sibling) assert.doesNotMatch(html, /coming soon/i);
+    const faqs = guideFaqs(guide.body);
+    assert.equal(faqs.length, 5);
+    const structured = guideStructuredData(guide);
+    const [article, faq] = structured["@graph"];
+    assert.ok(article);
+    assert.ok(faq);
+    assert.equal(article["@type"], "Article");
+    assert.equal(article.headline, guide.h1);
+    assert.equal(faq["@type"], "FAQPage");
+    assert.equal(faq.mainEntity?.length, 5);
+    assert.equal(JSON.stringify(structured).includes("Review"), false);
+    const meta = await guideMetadata({
+      params: Promise.resolve({ slug: item.slug }),
+    });
+    assert.deepEqual(meta.title, { absolute: guide.title });
+    assert.equal(meta.description, guide.description);
+  }
+  const color = loadGuide("graphic-tee-color-combinations");
+  assert.ok(color);
+  assert.match(color.body, /coming soon/);
+  assert.doesNotMatch(color.body, /rotation guide\]\(/i);
+  assert.doesNotMatch(color.body, /washed and faded color tees\]\(/i);
 });
 
 test("root loading shell is not served ahead of the real H1", () => {
