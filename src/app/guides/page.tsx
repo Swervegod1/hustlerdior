@@ -4,15 +4,17 @@ import ReadingPage from "@/components/ReadingPage";
 import { loadGuides } from "@/lib/guides";
 import { absoluteUrl } from "@/lib/seo";
 
+const title =
+  "Streetwear Brand Guides: Tactical Luxury, Veteran-Owned, 90s Bootleg";
 const description =
-  "Brand, collection, and care guides from Hustler Dior: the Concrete Edit, tactical luxury positioning, veteran-owned ownership, 90s bootleg graphic tees, and how to wash printed tees.";
+  "Streetwear brand guides from Hustler Dior: tactical luxury positioning, the veteran-owned story, 90s bootleg graphic tees, The Concrete Edit, and how to wash printed tees made to order through Printful.";
 
 export const metadata: Metadata = {
-  title: "Guides",
+  title,
   description,
   alternates: { canonical: absoluteUrl("/guides") },
   openGraph: {
-    title: "Hustler Dior Guides",
+    title: `${title} | Hustler Dior`,
     description,
     url: absoluteUrl("/guides"),
   },

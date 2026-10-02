@@ -1,0 +1,26 @@
+name: SEO robots
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  sitemap-robots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Check sitemap URLs are indexable
+        run: |
+          SITE_URL=https://hustlerdior.com SITE_ROLE=primary CATALOG_SNAPSHOT_PREVIEW=true PORT=3000 HOSTNAME=127.0.0.1 node .next/standalone/server.js &
+          for _ in $(seq 1 40); do
+            curl -sf -o /dev/null http://127.0.0.1:3000/ && break
+            sleep 1
+          done
+          node scripts/check-sitemap-robots.mjs http://127.0.0.1:3000

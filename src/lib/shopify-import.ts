@@ -183,3 +183,31 @@ function category(name: string, type: string) {
 }
 export type ShopifyEdit = ReturnType<typeof normalizeShopifyImport>;
 export type ShopifyPiece = ShopifyEdit["products"][number];
+
+/** Fields the extended-edit UI reads. Omits SKUs, import flags, and option dumps. */
+export function curatedClientCatalog(catalog: ShopifyEdit) {
+  return {
+    currency: catalog.currency,
+    products: catalog.products.map((piece) => ({
+      id: piece.id,
+      name: piece.name,
+      createdAt: piece.createdAt,
+      vendor: piece.vendor,
+      description: piece.description,
+      category: piece.category,
+      audience: piece.audience,
+      currency: piece.currency,
+      images: piece.images.map((image) => ({
+        url: image.url,
+        altText: image.altText,
+      })),
+      variants: piece.variants.map((variant) => ({
+        id: variant.id,
+        title: variant.title,
+        priceCents: variant.priceCents,
+      })),
+    })),
+  };
+}
+export type CuratedClientCatalog = ReturnType<typeof curatedClientCatalog>;
+export type CuratedClientPiece = CuratedClientCatalog["products"][number];

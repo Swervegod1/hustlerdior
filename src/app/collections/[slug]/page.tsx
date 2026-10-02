@@ -11,6 +11,7 @@ import { productIndex, productsForPage } from "@/lib/server/catalog";
 import { absoluteUrl, breadcrumbData, listingProductData } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 import CollectionGrid from "@/components/CollectionGrid";
+import { metadata as notFoundMetadata } from "@/app/not-found";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -29,12 +30,12 @@ async function resolve(props: Props) {
     (query.page !== undefined &&
       (typeof query.page !== "string" || !/^[1-9]\d{0,4}$/.test(query.page)))
   )
-    notFound();
+    return null;
   const page = Number(query.page ?? "1");
   const path = `/collections/${slug}`;
   const index = collectionProducts(collection, await productIndex());
   const pageCount = Math.max(1, Math.ceil(index.length / COLLECTION_PAGE_SIZE));
-  if (page > pageCount) notFound();
+  if (page > pageCount) return null;
   return {
     collection,
     page,
@@ -46,7 +47,9 @@ async function resolve(props: Props) {
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
-  const { collection, page, canonical } = await resolve(props);
+  const resolved = await resolve(props);
+  if (!resolved) return notFoundMetadata;
+  const { collection, page, canonical } = resolved;
   const title = collection.title + (page > 1 ? ` — Page ${page}` : "");
   return {
     title,
@@ -62,8 +65,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 }
 
 export default async function CollectionPage(props: Props) {
-  const { collection, page, path, index, pageCount, canonical } =
-    await resolve(props);
+  const resolved = await resolve(props);
+  if (!resolved) notFound();
+  const { collection, page, path, index, pageCount, canonical } = resolved;
   if ((await props.searchParams).page === "1") permanentRedirect(path);
   const offset = (page - 1) * COLLECTION_PAGE_SIZE;
   const products = await productsForPage(

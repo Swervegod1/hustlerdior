@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createElement, type ReactNode } from "react";
@@ -12,8 +12,9 @@ import { parseFrontmatter, siteRelativeHref } from "../src/lib/guide-parse";
 import { markdownToReact } from "../src/lib/markdown";
 import { absoluteUrl } from "../src/lib/seo";
 import ReadingPage from "../src/components/ReadingPage";
-import Loading from "../src/app/loading";
 import { generateMetadata as guideMetadata } from "../src/app/guides/[slug]/page";
+import { metadata as guidesIndexMetadata } from "../src/app/guides/page";
+import { metadata as notFoundMetadata } from "../src/app/not-found";
 
 const EXPECTED = {
   "what-is-hustler-dior":
@@ -195,12 +196,28 @@ test("wash guide is one indexable article with shop and help links", async () =>
   );
 });
 
-test("route loading placeholder is not a second H1", () => {
-  const html = renderToStaticMarkup(createElement(Loading));
-  assert.match(html, /LOADING/);
-  assert.match(html, /THE EDIT/);
-  assert.equal(html.includes("<h1"), false);
-  assert.match(html, /class="status-display"/);
+test("root loading shell is not served ahead of the real H1", () => {
+  assert.equal(existsSync(join(process.cwd(), "src/app/loading.tsx")), false);
+});
+
+test("guide index and missing-page titles name the topic once", () => {
+  assert.equal(
+    guidesIndexMetadata.title,
+    "Streetwear Brand Guides: Tactical Luxury, Veteran-Owned, 90s Bootleg",
+  );
+  assert.match(String(guidesIndexMetadata.description), /Printful/);
+  assert.doesNotMatch(
+    String(guidesIndexMetadata.description),
+    /in-house|DTF manufacturing|wash-test/i,
+  );
+  assert.equal(
+    loadGuide("tactical-luxury-streetwear-positioning")?.title,
+    "Tactical Luxury Streetwear Positioning | Hustler Dior",
+  );
+  assert.equal(notFoundMetadata.robots, null);
+  assert.deepEqual(notFoundMetadata.title, {
+    absolute: "Page not found | Hustler Dior",
+  });
 });
 
 test("help and fit-guide FAQ drop-ins are FAQPage graphs", () => {

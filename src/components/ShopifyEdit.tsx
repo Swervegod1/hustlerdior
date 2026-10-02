@@ -3,8 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
 import type {
-  ShopifyEdit as Catalog,
-  ShopifyPiece,
+  CuratedClientCatalog as Catalog,
+  CuratedClientPiece as ShopifyPiece,
 } from "@/lib/shopify-import";
 import { money } from "@/lib/format";
 import { Arrow, Close } from "./Icons";

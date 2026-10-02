@@ -3,14 +3,15 @@ import Link from "next/link";
 import ReadingPage from "@/components/ReadingPage";
 import { absoluteUrl } from "@/lib/seo";
 
+const title = "Independent Streetwear & The Concrete Edit";
 const description =
-  "Hustler Dior is an independent streetwear brand built around self-expression, graphic pieces and the ambition to create something of your own.";
+  "Hustler Dior is an independent streetwear brand. The Concrete Edit is graphic tees, hoodies, layers, and accessories, made to order through Printful.";
 export const metadata: Metadata = {
-  title: "About the Brand",
+  title,
   description,
   alternates: { canonical: absoluteUrl("/about") },
   openGraph: {
-    title: "About Hustler Dior",
+    title: `${title} | Hustler Dior`,
     description,
     url: absoluteUrl("/about"),
   },

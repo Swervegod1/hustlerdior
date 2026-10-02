@@ -12,6 +12,7 @@ import {
 } from "@/lib/seo";
 import { collections } from "@/lib/collections";
 import JsonLd from "@/components/JsonLd";
+import { metadata as notFoundMetadata } from "@/app/not-found";
 
 async function resolve(slug: string) {
   await connection();
@@ -26,7 +27,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const product = await resolve(slug);
-  if (!product) return { title: "Piece not found" };
+  // Throw notFound() only from the page. Doing it here renders Next's empty
+  // __next_error__ shell instead of the not-found document.
+  if (!product) return notFoundMetadata;
   return {
     title: product.name,
     description: productDescription(product),
