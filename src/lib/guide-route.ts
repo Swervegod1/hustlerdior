@@ -7,6 +7,7 @@ export const GUIDE_SLUGS = [
   "garment-dyed-vs-pigment-dyed-streetwear-tees",
   "graphic-tee-color-combinations",
   "how-to-remove-lint-and-pilling-from-hoodies",
+  "how-to-style-oversized-boxy-tees-with-baggy-pants",
 ] as const;
 
 export type GuideSlug = (typeof GUIDE_SLUGS)[number];

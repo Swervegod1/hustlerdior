@@ -83,6 +83,7 @@ test("the public storefront is indexable and staging hosts are not", () => {
     "/guides/garment-dyed-vs-pigment-dyed-streetwear-tees",
     "/guides/graphic-tee-color-combinations",
     "/guides/how-to-remove-lint-and-pilling-from-hoodies",
+    "/guides/how-to-style-oversized-boxy-tees-with-baggy-pants",
     "/help",
     "/fit-guide",
     "/about",

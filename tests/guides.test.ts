@@ -34,6 +34,8 @@ const EXPECTED = {
     "Graphic Tee Color Combinations: Let One Color Lead",
   "how-to-remove-lint-and-pilling-from-hoodies":
     "How to Remove Lint and Pilling from Hoodies Without Damaging the Fabric",
+  "how-to-style-oversized-boxy-tees-with-baggy-pants":
+    "How to Style Oversized Boxy Tees With Baggy Pants",
 } as const;
 
 test("published guides parse from MDX with matching slugs and H1s", () => {
@@ -209,16 +211,26 @@ test("new care and color guides are indexable articles with FAQ JSON-LD", async 
       slug: "garment-dyed-vs-pigment-dyed-streetwear-tees",
       title: "Garment-Dyed vs Pigment-Dyed Tees | Hustler Dior",
       sibling: "/guides/how-to-remove-lint-and-pilling-from-hoodies",
+      faqs: 5,
     },
     {
       slug: "graphic-tee-color-combinations",
       title: "Graphic Tee Color Combinations That Work | Hustler Dior",
       sibling: null,
+      faqs: 5,
     },
     {
       slug: "how-to-remove-lint-and-pilling-from-hoodies",
       title: "Remove Lint & Pilling From Hoodies Safely | Hustler Dior",
       sibling: "/guides/garment-dyed-vs-pigment-dyed-streetwear-tees",
+      faqs: 5,
+    },
+    {
+      slug: "how-to-style-oversized-boxy-tees-with-baggy-pants",
+      title: "Style Oversized Boxy Tees With Baggy Pants | Hustler Dior",
+      sibling: "/guides/graphic-tee-color-combinations",
+      faqs: 7,
+      comingSoon: true,
     },
   ] as const;
   for (const item of cases) {
@@ -240,9 +252,11 @@ test("new care and color guides are indexable articles with FAQ JSON-LD", async 
       createElement("article", null, markdownToReact(guide.body)),
     );
     assert.equal(html.includes("<h1"), false);
-    if (item.sibling) assert.doesNotMatch(html, /coming soon/i);
+    if (item.sibling && !("comingSoon" in item)) {
+      assert.doesNotMatch(html, /coming soon/i);
+    }
     const faqs = guideFaqs(guide.body);
-    assert.equal(faqs.length, 5);
+    assert.equal(faqs.length, item.faqs);
     const structured = guideStructuredData(guide);
     const [article, faq] = structured["@graph"];
     assert.ok(article);
@@ -250,7 +264,7 @@ test("new care and color guides are indexable articles with FAQ JSON-LD", async 
     assert.equal(article["@type"], "Article");
     assert.equal(article.headline, guide.h1);
     assert.equal(faq["@type"], "FAQPage");
-    assert.equal(faq.mainEntity?.length, 5);
+    assert.equal(faq.mainEntity?.length, item.faqs);
     assert.equal(JSON.stringify(structured).includes("Review"), false);
     const meta = await guideMetadata({
       params: Promise.resolve({ slug: item.slug }),
@@ -263,6 +277,21 @@ test("new care and color guides are indexable articles with FAQ JSON-LD", async 
   assert.match(color.body, /coming soon/);
   assert.doesNotMatch(color.body, /rotation guide\]\(/i);
   assert.doesNotMatch(color.body, /washed and faded color tees\]\(/i);
+  const styling = loadGuide("how-to-style-oversized-boxy-tees-with-baggy-pants");
+  assert.ok(styling);
+  assert.doesNotMatch(styling.body, /\/collections\/bottoms/);
+  assert.match(styling.body, /coming soon/);
+  assert.doesNotMatch(styling.body, /regular cuts\]\(/i);
+  assert.match(styling.body, /\/guides\/how-to-wash-graphic-tees/);
+  assert.match(
+    styling.body,
+    /\/guides\/garment-dyed-vs-pigment-dyed-streetwear-tees/,
+  );
+  assert.match(styling.body, /\/guides\/how-to-remove-lint-and-pilling-from-hoodies/);
+  assert.doesNotMatch(
+    styling.body,
+    /\b(gsm|cotton blend|in-house|DTF|wash-test)\b/i,
+  );
 });
 
 test("root loading shell is not served ahead of the real H1", () => {
