@@ -9,6 +9,7 @@ import {
 } from "@/lib/collections";
 import { productIndex, productsForPage } from "@/lib/server/catalog";
 import { absoluteUrl, breadcrumbData, listingProductData } from "@/lib/seo";
+import { displayTitle } from "@/lib/product-title";
 import JsonLd from "@/components/JsonLd";
 import CollectionGrid from "@/components/CollectionGrid";
 import { metadata as notFoundMetadata } from "@/app/not-found";
@@ -162,7 +163,7 @@ export default async function CollectionPage(props: Props) {
             itemListElement: products.map((p, i) => ({
               "@type": "ListItem",
               position: offset + i + 1,
-              name: p.name,
+              name: displayTitle(p.id, p.name),
               url: absoluteUrl(`/products/${p.slug}`),
               item: listingProductData(p),
             })),

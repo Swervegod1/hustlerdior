@@ -1,15 +1,11 @@
 import "server-only";
 import { getProduct, getProducts, printfulRequest } from "./printful";
 import type { CatalogPage, Product } from "../types";
-import {
-  audienceFor,
-  categoryFor,
-  productListSchema,
-  productSlug,
-} from "../normalize";
+import { audienceFor, categoryFor, productListSchema } from "../normalize";
 import { cache } from "react";
 import { applyCatalogPolicy, REMOVED_PRODUCT_IDS } from "../catalog-policy";
 import { catalogUsesSnapshot } from "../env";
+import { catalogSlug } from "../title-overrides";
 
 export async function initialCatalog(): Promise<CatalogPage | null> {
   if (catalogUsesSnapshot()) {
@@ -60,7 +56,15 @@ export const productIndex = cache(async (): Promise<ProductIndexEntry[]> => {
       ({ id, name, slug, category, audience }) =>
         REMOVED_PRODUCT_IDS.has(id)
           ? []
-          : [{ id, name, slug, category, audience }],
+          : [
+              {
+                id,
+                name,
+                slug: catalogSlug(id, name, slug),
+                category,
+                audience,
+              },
+            ],
     );
   }
   const products = new Map<number, ProductIndexEntry>();
@@ -76,7 +80,7 @@ export const productIndex = cache(async (): Promise<ProductIndexEntry[]> => {
         products.set(p.id, {
           id: p.id,
           name: p.name,
-          slug: productSlug(p.name, p.id),
+          slug: catalogSlug(p.id, p.name),
           category: categoryFor(p.name),
           audience: audienceFor(p.name),
         });

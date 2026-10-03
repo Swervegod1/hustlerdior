@@ -1,13 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  collectionPathAction,
-  orderPathAction,
-} from "@/lib/collection-route";
+import { collectionPathAction, orderPathAction } from "@/lib/collection-route";
 import {
   guideSlugAction,
   unavailablePageHtml,
   unknownGuideHtml,
 } from "@/lib/guide-route";
+import { productSlugRedirect } from "@/lib/product-route";
 import {
   CANONICAL_ORIGIN,
   isProductionHost,
@@ -49,6 +47,13 @@ export function proxy(request: NextRequest) {
   }
 
   const origin = publicOrigin(request, hostname || request.nextUrl.host);
+  const productTarget = productSlugRedirect(request.nextUrl.pathname);
+  if (productTarget) {
+    const target = new URL(productTarget, origin);
+    target.search = request.nextUrl.search;
+    return NextResponse.redirect(target, 308);
+  }
+
   const guide = guideSlugAction(request.nextUrl.pathname);
   if (guide.kind === "redirect") {
     return NextResponse.redirect(new URL(guide.pathname, origin), 301);
