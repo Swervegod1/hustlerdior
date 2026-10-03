@@ -346,7 +346,10 @@ test("heavyweight guide publishes stated Printful weights and visible FAQs", asy
     guide.body,
     /no-shrink|600 gsm|loopback|French terry|DTF|pre-shrunk/i,
   );
-  assert.doesNotMatch(guide.body, /La Lakers|476371270|la-lakers-hotplate/i);
+  assert.doesNotMatch(
+    guide.body,
+    /La Lakers|476371270|la-lakers-hotplate|La Hotplated|476461521|la-hotplated/i,
+  );
   assert.match(guide.body, /Bella \+ Canvas 3010/);
   assert.match(
     guide.body,
