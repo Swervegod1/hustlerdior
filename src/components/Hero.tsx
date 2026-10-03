@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "./Icons";
 import type { Product } from "@/lib/types";
-import { money, shortName } from "@/lib/format";
+import { money } from "@/lib/format";
+import { displayTitle, storefrontTitle } from "@/lib/product-title";
 import Arrival from "./Arrival";
 import {
   motion,
@@ -94,19 +95,19 @@ export default function Hero({
             <Link
               className="campaign-product"
               href={`/products/${feature.slug}`}
-              aria-label={`Explore ${feature.name}`}
+              aria-label={`Explore ${displayTitle(feature.id, feature.name)}`}
             >
               <div className="campaign-product-image">
                 <Image
                   src={feature.image}
-                  alt={feature.name}
+                  alt={displayTitle(feature.id, feature.name)}
                   fill
                   sizes="(max-width: 700px) 85vw, 43vw"
                   preload
                 />
               </div>
               <div className="campaign-product-label">
-                <span>{shortName(feature.name)}</span>
+                <span>{storefrontTitle(feature.id, feature.name)}</span>
                 <b>
                   {feature.priceCents !== feature.maxPriceCents ? "From " : ""}
                   {money(feature.priceCents, feature.currency)}{" "}

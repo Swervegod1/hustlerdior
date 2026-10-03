@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { money } from "@/lib/format";
+import { displayTitle } from "@/lib/product-title";
 import { useCart, useUI } from "@/stores/cart";
 import { sound } from "@/lib/audio";
 import { Arrow } from "./Icons";
@@ -44,6 +45,7 @@ export default function ProductOptions({
   const display = selected ?? colorVariants[0];
   const image = display?.image ?? product.image;
   const colors = [...new Set(product.variants.map((v) => v.color))];
+  const title = displayTitle(product.id, product.name);
   const add = useCart((s) => s.add);
   const Heading = page ? "h1" : "h2";
   async function addToBag() {
@@ -93,14 +95,14 @@ export default function ProductOptions({
       <ProductImageZoom
         key={image ?? product.id}
         src={image}
-        name={`${product.name} in ${color}`}
+        name={`${title} in ${color}`}
         label={`HUSTLER DIOR / ${product.category.toUpperCase()}`}
       />
       <div className="option-copy">
         <p className="eyebrow">
           {product.audience.toUpperCase()} / {product.category.toUpperCase()}
         </p>
-        <Heading>{product.name}</Heading>
+        <Heading>{title}</Heading>
         <p className="option-price">
           {money(display.priceCents, display.currency)}
         </p>

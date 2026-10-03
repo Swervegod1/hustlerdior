@@ -10,7 +10,8 @@ import {
 } from "framer-motion";
 import { useState, type PointerEvent } from "react";
 import type { Product } from "@/lib/types";
-import { money, shortName } from "@/lib/format";
+import { money } from "@/lib/format";
+import { displayTitle, storefrontTitle } from "@/lib/product-title";
 import { useCart, useUI } from "@/stores/cart";
 import { sound } from "@/lib/audio";
 import { Arrow } from "./Icons";
@@ -117,13 +118,13 @@ export default function ProductCard({
           type="button"
           className="product-image-button"
           onClick={openDetails}
-          aria-label={`View ${product.name}`}
+          aria-label={`View ${displayTitle(product.id, product.name)}`}
         >
           {displayedImage ? (
             <Image
               key={displayedImage}
               src={displayedImage}
-              alt={`${product.name}${previewColor ? ` in ${previewColor}` : ""}`}
+              alt={`${displayTitle(product.id, product.name)}${previewColor ? ` in ${previewColor}` : ""}`}
               fill
               sizes="(max-width: 760px) 44vw, (max-width: 1100px) 30vw, 23vw"
               className="product-image"
@@ -143,7 +144,7 @@ export default function ProductCard({
           className="quick-add"
           onClick={quickAdd}
           disabled={!variants.length || adding}
-          aria-label={`${variants.length ? "Quick add" : "Unavailable"}: ${product.name}`}
+          aria-label={`${variants.length ? "Quick add" : "Unavailable"}: ${displayTitle(product.id, product.name)}`}
         >
           <span>
             {adding
@@ -161,7 +162,7 @@ export default function ProductCard({
         <div
           className="card-color-previews"
           role="group"
-          aria-label={`Preview colors for ${product.name}`}
+          aria-label={`Preview colors for ${displayTitle(product.id, product.name)}`}
         >
           {colors.slice(0, 4).map((color) => {
             const variant = product.variants.find((v) => v.color === color);
@@ -201,7 +202,7 @@ export default function ProductCard({
             {colors.length === 1 ? "color" : "colors"}
           </p>
           <Link href={`/products/${product.slug}`} className="product-name">
-            {shortName(product.name)}
+            {storefrontTitle(product.id, product.name)}
           </Link>
         </div>
         <span className="product-price">

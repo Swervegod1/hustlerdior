@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { collections, collectionProducts } from "@/lib/collections";
 import type { Product } from "@/lib/types";
+import { displayTitle } from "@/lib/product-title";
 import { Arrow } from "./Icons";
 
 export default function CollectionLinks({
@@ -38,7 +39,7 @@ export default function CollectionLinks({
                 {product?.image ? (
                   <Image
                     src={product.image}
-                    alt={product.name}
+                    alt={displayTitle(product.id, product.name)}
                     fill
                     sizes="(max-width: 700px) 46vw, 23vw"
                   />

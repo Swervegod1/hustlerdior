@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { CatalogPage, Product } from "@/lib/types";
 import ProductCard from "./ProductCard";
 import ProductOptions from "./ProductOptions";
+import { displayTitle } from "@/lib/product-title";
 import { Arrow, Close } from "./Icons";
 
 export default function Catalog({ initial }: { initial: CatalogPage | null }) {
@@ -265,7 +266,9 @@ export default function Catalog({ initial }: { initial: CatalogPage | null }) {
             }}
           >
             <Dialog.Title className="sr-only">
-              {selected?.name ?? "Product details"}
+              {selected
+                ? displayTitle(selected.id, selected.name)
+                : "Product details"}
             </Dialog.Title>
             <Dialog.Description className="sr-only">
               Choose your color and size to add this piece to your bag.

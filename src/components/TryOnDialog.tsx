@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import type { Product } from "@/lib/types";
+import { displayTitle } from "@/lib/product-title";
 import { Close, Arrow } from "./Icons";
 
 export default function TryOnDialog({
@@ -273,7 +274,7 @@ export default function TryOnDialog({
             </div>
             <div className="tryon-controls">
               <span className="eyebrow">02 / YOUR SELECTED PIECE</span>
-              <h3>{product.name}</h3>
+              <h3>{displayTitle(product.id, product.name)}</h3>
               <label className="field-label">
                 COLOR / SIZE
                 <select

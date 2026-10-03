@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { applyCatalogPolicy } from "./catalog-policy";
 import type { Category, Product, ProductVariant, StockStatus } from "./types";
 
 const syncProduct = z.object({
@@ -147,7 +148,7 @@ export function normalizeProduct(input: unknown): Product | null {
   const prices = (purchasable.length ? purchasable : variants).map(
     (v) => v.priceCents,
   );
-  return {
+  return applyCatalogPolicy({
     id: product.id,
     name: product.name,
     slug: productSlug(product.name, product.id),
@@ -158,5 +159,5 @@ export function normalizeProduct(input: unknown): Product | null {
     priceCents: Math.min(...prices),
     maxPriceCents: Math.max(...prices),
     currency,
-  };
+  });
 }
