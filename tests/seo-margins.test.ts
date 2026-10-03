@@ -84,6 +84,7 @@ test("the public storefront is indexable and staging hosts are not", () => {
     "/guides/graphic-tee-color-combinations",
     "/guides/how-to-remove-lint-and-pilling-from-hoodies",
     "/guides/how-to-style-oversized-boxy-tees-with-baggy-pants",
+    "/guides/heavyweight-hoodies-and-tees-explained",
     "/help",
     "/fit-guide",
     "/about",

@@ -7,7 +7,7 @@ import { absoluteUrl } from "@/lib/seo";
 const title =
   "Streetwear Brand Guides: Tactical Luxury, Veteran-Owned, 90s Bootleg";
 const description =
-  "Streetwear brand guides from Hustler Dior: tactical luxury positioning, the veteran-owned story, 90s bootleg graphic tees, garment-dyed and pigment-dyed color, graphic tee color combinations, oversized boxy tees with baggy pants, hoodie lint and pilling care, and how to wash printed tees made to order through Printful.";
+  "Streetwear brand guides from Hustler Dior: tactical luxury positioning, the veteran-owned story, 90s bootleg graphic tees, garment-dyed and pigment-dyed color, graphic tee color combinations, oversized boxy tees with baggy pants, hoodie lint and pilling care, heavyweight hoodie and tee fabric weights, and how to wash printed tees made to order through Printful.";
 
 export const metadata: Metadata = {
   title,
@@ -37,8 +37,7 @@ export default function GuidesIndex() {
         </section>
       ))}
       <p>
-        Explore the{" "}
-        <Link href="/collections/tees">tees</Link> or read{" "}
+        Explore the <Link href="/collections/tees">tees</Link> or read{" "}
         <Link href="/about">About Hustler Dior</Link>.
       </p>
     </ReadingPage>

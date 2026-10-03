@@ -23,7 +23,9 @@ function renderInline(text: string): ReactNode[] {
   let remaining = text;
   let key = 0;
   while (remaining.length) {
-    const next = remaining.match(/(\*\*[^*]+?\*\*|\*[^*]+?\*|\[[^\]]+?\]\([^)]+?\))/);
+    const next = remaining.match(
+      /(\*\*[^*]+?\*\*|\*[^*]+?\*|\[[^\]]+?\]\([^)]+?\))/,
+    );
     if (!next || next.index === undefined) {
       nodes.push(remaining);
       break;
@@ -49,6 +51,58 @@ function heading(level: 2 | 3, text: string, key: number) {
 
 function paragraph(text: string, key: number) {
   return createElement("p", { key }, renderInline(text));
+}
+
+function splitRow(line: string) {
+  return line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim());
+}
+
+function isTableRow(line: string) {
+  return /^\s*\|.+\|\s*$/.test(line);
+}
+
+function isTableSeparator(line: string) {
+  return /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(line);
+}
+
+function table(header: string[], rows: string[][], key: number) {
+  return createElement(
+    "div",
+    { key, className: "fit-table-wrap" },
+    createElement(
+      "table",
+      { className: "fit-table" },
+      createElement(
+        "thead",
+        null,
+        createElement(
+          "tr",
+          null,
+          header.map((cell, index) =>
+            createElement("th", { key: index }, renderInline(cell)),
+          ),
+        ),
+      ),
+      createElement(
+        "tbody",
+        null,
+        rows.map((row, rowIndex) =>
+          createElement(
+            "tr",
+            { key: rowIndex },
+            row.map((cell, cellIndex) =>
+              createElement("td", { key: cellIndex }, renderInline(cell)),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 function list(ordered: boolean, items: string[], key: number) {
@@ -101,6 +155,17 @@ export function markdownToReact(source: string): ReactNode {
       blocks.push(list(false, items, key++));
       continue;
     }
+    if (isTableRow(line) && isTableSeparator(lines[i + 1] ?? "")) {
+      const header = splitRow(line);
+      i += 2;
+      const rows: string[][] = [];
+      while (i < lines.length && isTableRow(lines[i])) {
+        rows.push(splitRow(lines[i]));
+        i += 1;
+      }
+      blocks.push(table(header, rows, key++));
+      continue;
+    }
     if (/^\s*\d+\.\s+/.test(line)) {
       const items: string[] = [];
       while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) {
@@ -118,7 +183,8 @@ export function markdownToReact(source: string): ReactNode {
       !/^#{1,3}\s+/.test(lines[i]) &&
       !/^---+$/.test(lines[i].trim()) &&
       !/^\s*[-*]\s+/.test(lines[i]) &&
-      !/^\s*\d+\.\s+/.test(lines[i])
+      !/^\s*\d+\.\s+/.test(lines[i]) &&
+      !isTableRow(lines[i])
     ) {
       paragraphLines.push(lines[i]);
       i += 1;
