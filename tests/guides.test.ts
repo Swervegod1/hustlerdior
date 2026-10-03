@@ -346,6 +346,12 @@ test("heavyweight guide publishes stated Printful weights and visible FAQs", asy
     guide.body,
     /no-shrink|600 gsm|loopback|French terry|DTF|pre-shrunk/i,
   );
+  assert.doesNotMatch(guide.body, /La Lakers|476371270|la-lakers-hotplate/i);
+  assert.match(guide.body, /Bella \+ Canvas 3010/);
+  assert.match(
+    guide.body,
+    /hustler-dior-dog-gone-wildn-out-unisex-oversized-boxy-tee-475170199/,
+  );
   const faqs = guideFaqs(guide.body);
   assert.equal(faqs.length, 7);
   assert.equal(faqs[0]?.question, "What does gsm mean on a hoodie or t-shirt?");
