@@ -228,9 +228,32 @@ export function listingProductData(product: Product) {
   };
 }
 
-export function productData(product: Product) {
+/** Visible Printful facts. Strings stay verbatim; blank means omit. */
+export type CatalogFacts = {
+  material?: string;
+  weight?: string;
+  additionalProperty?: { name: string; value: string }[];
+};
+
+function statedFact(value: string | undefined) {
+  const trimmed = value?.trim() ?? "";
+  return trimmed ? value : undefined;
+}
+
+export function productData(product: Product, facts?: CatalogFacts | null) {
   const path = `/products/${product.slug}`;
   const offers = productOffers(product);
+  const material = statedFact(facts?.material);
+  const weight = statedFact(facts?.weight);
+  const additionalProperty = (facts?.additionalProperty ?? []).flatMap(
+    (property) => {
+      const name = property.name.trim();
+      const value = statedFact(property.value);
+      return name && value
+        ? [{ "@type": "PropertyValue" as const, name, value }]
+        : [];
+    },
+  );
   return {
     "@context": "https://schema.org",
     "@type": "ProductGroup",
@@ -241,6 +264,17 @@ export function productData(product: Product) {
     productGroupID: `HD-${product.id}`,
     brand: { "@type": "Brand", name: "Hustler Dior" },
     category: product.category,
+    ...(material ? { material } : {}),
+    ...(weight
+      ? {
+          weight: {
+            "@type": "QuantitativeValue" as const,
+            name: "Fabric weight",
+            value: weight,
+          },
+        }
+      : {}),
+    ...(additionalProperty.length ? { additionalProperty } : {}),
     ...(product.image ? { image: [product.image] } : {}),
     ...(offers ? { offers } : {}),
     variesBy: ["https://schema.org/size", "https://schema.org/color"],

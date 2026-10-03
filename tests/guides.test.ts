@@ -36,6 +36,8 @@ const EXPECTED = {
     "How to Remove Lint and Pilling from Hoodies Without Damaging the Fabric",
   "how-to-style-oversized-boxy-tees-with-baggy-pants":
     "How to Style Oversized Boxy Tees With Baggy Pants",
+  "heavyweight-hoodies-and-tees-explained":
+    "Heavyweight Hoodies and Tees Explained: oz/yd², gsm, and What's Actually Stated",
 } as const;
 
 test("published guides parse from MDX with matching slugs and H1s", () => {
@@ -85,6 +87,26 @@ test("guide markdown renders headings, internal links, and no extra H1", () => {
   assert.match(html, /<em>bootleg<\/em>/);
   assert.match(html, /<ul>/);
   assert.match(html, /<ol>/);
+  const table = renderToStaticMarkup(
+    createElement(
+      "div",
+      null,
+      markdownToReact(
+        [
+          "| Blank | Weight |",
+          "| --- | --- |",
+          "| Stanley/Stella | [Dog Gone hoodie](https://hustlerdior.com/products/hustler-dior-dog-gone-unisex-sculpted-heavyweight-hoodie-475170849) |",
+        ].join("\n"),
+      ),
+    ),
+  );
+  assert.match(table, /<th>Blank<\/th>/);
+  assert.match(table, /<th>Weight<\/th>/);
+  assert.match(
+    table,
+    /href="\/products\/hustler-dior-dog-gone-unisex-sculpted-heavyweight-hoodie-475170849"/,
+  );
+  assert.equal(table.includes("<h1"), false);
 });
 
 test("published guide bodies render a visible article without claiming live checkout", () => {
@@ -100,6 +122,7 @@ test("published guide bodies render a visible article without claiming live chec
       html,
       /\b(sergeant|lieutenant|captain|colonel|major)\b/i,
     );
+    if (guide.slug === "heavyweight-hoodies-and-tees-explained") continue;
     assert.match(html, /Chase W\. Stemple/);
     assert.match(html, /Swerve God/);
   }
@@ -277,7 +300,9 @@ test("new care and color guides are indexable articles with FAQ JSON-LD", async 
   assert.match(color.body, /coming soon/);
   assert.doesNotMatch(color.body, /rotation guide\]\(/i);
   assert.doesNotMatch(color.body, /washed and faded color tees\]\(/i);
-  const styling = loadGuide("how-to-style-oversized-boxy-tees-with-baggy-pants");
+  const styling = loadGuide(
+    "how-to-style-oversized-boxy-tees-with-baggy-pants",
+  );
   assert.ok(styling);
   assert.doesNotMatch(styling.body, /\/collections\/bottoms/);
   assert.match(styling.body, /coming soon/);
@@ -287,10 +312,89 @@ test("new care and color guides are indexable articles with FAQ JSON-LD", async 
     styling.body,
     /\/guides\/garment-dyed-vs-pigment-dyed-streetwear-tees/,
   );
-  assert.match(styling.body, /\/guides\/how-to-remove-lint-and-pilling-from-hoodies/);
+  assert.match(
+    styling.body,
+    /\/guides\/how-to-remove-lint-and-pilling-from-hoodies/,
+  );
   assert.doesNotMatch(
     styling.body,
     /\b(gsm|cotton blend|in-house|DTF|wash-test)\b/i,
+  );
+});
+
+test("heavyweight guide publishes stated Printful weights and visible FAQs", async () => {
+  const guide = loadGuide("heavyweight-hoodies-and-tees-explained");
+  assert.ok(guide);
+  assert.equal(
+    guide.title,
+    "Heavyweight Hoodies and Tees Explained | Hustler Dior",
+  );
+  assert.equal(
+    guide.description,
+    "Fabric weight in oz/yd² and gsm, explained. See Printful's stated weights for Hustler Dior hoodies and tees, from 6 oz tees to a 500 gsm hoodie.",
+  );
+  assert.equal(
+    guide.canonical,
+    "https://hustlerdior.com/guides/heavyweight-hoodies-and-tees-explained",
+  );
+  assert.doesNotMatch(
+    guide.body,
+    /Meta title|Meta description|Canonical \(when live\)|status:\s*draft|softCta/i,
+  );
+  assert.doesNotMatch(guide.body, /^# /m);
+  assert.doesNotMatch(
+    guide.body,
+    /no-shrink|600 gsm|loopback|French terry|DTF|pre-shrunk/i,
+  );
+  assert.doesNotMatch(
+    guide.body,
+    /La Lakers|476371270|la-lakers-hotplate|La Hotplated|476461521|la-hotplated/i,
+  );
+  assert.match(guide.body, /Bella \+ Canvas 3010/);
+  assert.match(
+    guide.body,
+    /hustler-dior-dog-gone-wildn-out-unisex-oversized-boxy-tee-475170199/,
+  );
+  const faqs = guideFaqs(guide.body);
+  assert.equal(faqs.length, 7);
+  assert.equal(faqs[0]?.question, "What does gsm mean on a hoodie or t-shirt?");
+  assert.equal(
+    faqs[6]?.question,
+    "Are Hustler Dior hoodies and tees made in-house?",
+  );
+  assert.match(
+    faqs[6]?.answer ?? "",
+    /made to order through our fulfillment partner Printful/,
+  );
+  const structured = guideStructuredData(guide);
+  const [article, faq] = structured["@graph"];
+  assert.equal(article?.["@type"], "Article");
+  assert.equal(article?.headline, guide.h1);
+  assert.equal(faq?.["@type"], "FAQPage");
+  assert.equal(faq?.mainEntity?.length, 7);
+  const html = renderToStaticMarkup(
+    createElement("article", null, markdownToReact(guide.body)),
+  );
+  assert.equal(html.includes("<h1"), false);
+  assert.match(html, /<h2>FAQ<\/h2>/);
+  assert.match(html, /15 oz\.\/yd\.² \(500 g\/m²\)/);
+  assert.match(html, /6\.1 oz\/yd² \(206\.8 g\/m²\)/);
+  assert.match(
+    html,
+    /href="\/products\/hustler-dior-dog-gone-unisex-sculpted-heavyweight-hoodie-475170849"/,
+  );
+  assert.match(html, /href="\/collections\/hoodies-layers"/);
+  assert.match(html, /href="\/collections\/tees"/);
+  const meta = await guideMetadata({
+    params: Promise.resolve({
+      slug: "heavyweight-hoodies-and-tees-explained",
+    }),
+  });
+  assert.deepEqual(meta.title, { absolute: guide.title });
+  assert.equal(meta.description, guide.description);
+  assert.equal(
+    meta.alternates?.canonical,
+    absoluteUrl("/guides/heavyweight-hoodies-and-tees-explained"),
   );
 });
 

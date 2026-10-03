@@ -12,10 +12,12 @@ import {
 } from "@/lib/seo";
 import { collections } from "@/lib/collections";
 import JsonLd from "@/components/JsonLd";
+import ProductDetails from "@/components/ProductDetails";
 import { metadata as notFoundMetadata } from "@/app/not-found";
 import snapshot from "@/data/catalog-snapshot.json";
 import { catalogDocumentTitles } from "@/lib/product-title";
 import type { Product } from "@/lib/types";
+import { catalogFactsFor } from "@/lib/verified-specs";
 
 const titlePeers = (snapshot.products as Product[]).map((product) => ({
   id: product.id,
@@ -136,6 +138,7 @@ export default async function ProductPage({
         initialColor={initialColor}
         page
       />
+      <ProductDetails productId={product.id} />
       <section className="reading-panel product-reading">
         <p>{productDescription(titled)}</p>
         <h2>FIND YOUR FIT.</h2>
@@ -148,7 +151,7 @@ export default async function ProductPage({
         <span> · </span>
         <Link href="/help">Ordering information ↗</Link>
       </section>
-      <JsonLd data={productData(titled)} />
+      <JsonLd data={productData(titled, catalogFactsFor(product.id))} />
       <JsonLd data={breadcrumbData(crumbs)} />
     </main>
   );

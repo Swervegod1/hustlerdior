@@ -28,7 +28,8 @@
     "inventory:shopify": "node --import tsx scripts/stage-shopify-import.mjs",
     "inventory:printful": "node --import tsx --env-file=.env.local scripts/import-printful-inventory.mjs",
     "checkout:check": "node --env-file-if-exists=.env.local scripts/check-checkout.mjs",
-    "seo:robots": "node scripts/check-sitemap-robots.mjs"
+    "seo:robots": "node scripts/check-sitemap-robots.mjs",
+    "specs:build": "node --import tsx scripts/build-verified-specs.ts"
   },
   "dependencies": {
     "@fontsource/anton": "5.3.0",

@@ -1089,6 +1089,33 @@ button {
 .product-page .option-copy h2 {
   font-size: 44px;
 }
+.product-details {
+  max-width: 860px;
+  margin: 48px 0 0;
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+}
+.product-details h2 {
+  font: 400 clamp(27px, 3vw, 40px) / 1.2 var(--font-display);
+  margin: 0 0 8px;
+}
+.product-details dl {
+  margin: 0;
+}
+.product-details dt {
+  margin-top: 18px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+.product-details dd {
+  margin: 6px 0 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #bfc1b7;
+  white-space: pre-wrap;
+}
 .status-page {
   padding: 12vh 8%;
   min-height: 70vh;
