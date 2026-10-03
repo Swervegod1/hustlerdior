@@ -183,8 +183,17 @@ test("Gildan 5000 document titles drop heavyweight and keep slugs", () => {
     assert.ok(product);
     assert.equal(applyCatalogPolicy(product)?.slug, product.slug);
   }
-  assert.match(
-    products.find((product) => product.id === 471749168)?.slug ?? "",
-    /heavyweight/,
+  const gunz = products.find((product) => product.id === 471749168);
+  assert.ok(gunz);
+  assert.match(gunz.slug, /heavyweight/);
+  const structured = productData(applyCatalogPolicy(gunz)!);
+  assert.equal(structured.name, "Gunz-n-Roses Men's tee");
+  assert.doesNotMatch(structured.description, /\bheavyweight\b/i);
+  for (const variant of structured.hasVariant) {
+    assert.doesNotMatch(variant.name, /\bheavyweight\b/i);
+  }
+  assert.equal(
+    structured.hasVariant[0]?.name,
+    "Gunz-n-Roses Men's tee / Maroon / S",
   );
 });

@@ -1,4 +1,5 @@
 import { displayTitle } from "./product-title";
+import { titleOverrideFor } from "./title-overrides";
 import type { Product, ProductVariant, StockStatus } from "./types";
 
 export const CANONICAL_ORIGIN = "https://hustlerdior.com";
@@ -173,6 +174,13 @@ type SchemaAggregateOffer = {
   availability?: string;
 };
 
+/** Printful variant labels keep the original name. Overrides replace that lead. */
+function variantSchemaName(product: Product, variant: ProductVariant) {
+  const override = titleOverrideFor(product.id);
+  if (!override) return variant.name;
+  return `${override} / ${variant.color} / ${variant.size}`;
+}
+
 function offerFor(variant: ProductVariant, url: string): SchemaOffer {
   const availability = offerAvailability(variant.stock);
   return {
@@ -290,7 +298,7 @@ export function productData(product: Product, facts?: CatalogFacts | null) {
       return {
         "@type": "Product" as const,
         "@id": `${absoluteUrl(path)}#variant-${variant.id}`,
-        name: variant.name,
+        name: variantSchemaName(product, variant),
         sku: `HD-${variant.id}`,
         size: variant.size,
         color: variant.color,
