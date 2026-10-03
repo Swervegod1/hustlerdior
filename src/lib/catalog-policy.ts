@@ -1,5 +1,6 @@
 import type { Product, ProductVariant } from "./types";
 import prices from "@/data/price-overrides.json";
+import { catalogSlug } from "./title-overrides";
 
 /**
  * Columbia fleece vest. Removed until the blank can be fulfilled again.
@@ -51,8 +52,9 @@ function priceRange(variants: ProductVariant[]) {
 
 /**
  * One catalog pass for storefront, JSON-LD, and checkout.
- * Slugs stay on the original Printful name. Prices change only while the
- * override file is enabled.
+ * An active title override replaces the public slug via productSlug(title, id).
+ * Prices change only while the price override file is enabled.
+ * The Printful name stays on the product so checkout line items are unchanged.
  */
 export function applyCatalogPolicy(product: Product): Product | null {
   if (REMOVED_PRODUCT_IDS.has(product.id)) return null;
@@ -62,7 +64,12 @@ export function applyCatalogPolicy(product: Product): Product | null {
     return [cents === undefined ? variant : { ...variant, priceCents: cents }];
   });
   if (!variants.length) return null;
-  return { ...product, variants, ...priceRange(variants) };
+  return {
+    ...product,
+    slug: catalogSlug(product.id, product.name, product.slug),
+    variants,
+    ...priceRange(variants),
+  };
 }
 
 /** Cents checkout copies onto a Stripe line item. Same field the page renders. */

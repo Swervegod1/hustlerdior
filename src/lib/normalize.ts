@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { applyCatalogPolicy } from "./catalog-policy";
+import { productSlug } from "./slug";
 import type { Category, Product, ProductVariant, StockStatus } from "./types";
+
+export { productSlug };
 
 const syncProduct = z.object({
   id: z.number().int().positive(),
@@ -98,13 +101,6 @@ export function audienceFor(name: string): Product["audience"] {
         : /men[’']?s|hoochie daddy/i.test(name)
           ? "Men"
           : "Unisex";
-}
-
-export function productSlug(name: string, id: number): string {
-  return `${name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")}-${id}`;
 }
 
 export function normalizeProduct(input: unknown): Product | null {

@@ -12,8 +12,17 @@ import {
 } from "../src/lib/catalog-policy";
 import { normalizeProduct } from "../src/lib/normalize";
 import { catalogDocumentTitles } from "../src/lib/product-title";
+import { productSlug } from "../src/lib/slug";
 import { productData, schemaPrice } from "../src/lib/seo";
 import type { Product, ProductVariant } from "../src/lib/types";
+
+const RETITLED: Record<number, string> = {
+  471749167: "YUM YUM DRIP Classic Tee",
+  471749168: "Gunz-n-Roses Men's Classic Tee",
+  471749169: "YUM YUM DRIP B&W Classic Tee",
+  471749182: "SwerveGang Purp Men's Classic Tee",
+  471749219: "Don't B A Menace Tees Classic Tee",
+};
 
 const products = snapshot.products as Product[];
 
@@ -167,33 +176,59 @@ test("the Columbia fleece vest leaves the catalog", () => {
   );
 });
 
-test("Gildan 5000 document titles drop heavyweight and keep slugs", () => {
+test("five Gildan titles follow productSlug and the other 5000s stay", () => {
   const gildan = Object.entries(specs)
     .filter(([, record]) => /Gildan \| 5000 \|/.test(record.blank ?? ""))
     .map(([id]) => Number(id));
   assert.equal(gildan.length, 14);
+  const plain = [
+    471749171, 471749172, 471749183, 471749186, 471749188, 471749191, 471749193,
+    471749195,
+  ];
   const titles = catalogDocumentTitles(
     products.map((product) => ({ id: product.id, name: product.name })),
   );
-  for (const id of gildan) {
-    const title = titles.get(id);
-    assert.ok(title);
-    assert.doesNotMatch(title, /\bheavyweight\b/i);
+  for (const [idText, title] of Object.entries(RETITLED)) {
+    const id = Number(idText);
     const product = products.find((item) => item.id === id);
     assert.ok(product);
-    assert.equal(applyCatalogPolicy(product)?.slug, product.slug);
+    const next = applyCatalogPolicy(product);
+    assert.ok(next);
+    assert.equal(titles.get(id), title);
+    assert.equal(next.slug, productSlug(title, id));
+    assert.notEqual(next.slug, product.slug);
+    assert.equal(next.name, product.name);
   }
+  for (const id of [...plain, 471749200]) {
+    const product = products.find((item) => item.id === id);
+    assert.ok(product);
+    const next = applyCatalogPolicy(product);
+    assert.ok(next);
+    assert.equal(next.slug, product.slug);
+    assert.equal(next.name, product.name);
+  }
+  for (const id of plain) {
+    assert.match(String(titles.get(id)), /Men's heavyweight tee/);
+  }
+  assert.equal(titles.get(471749200), "No Menace Tee");
+
   const gunz = products.find((product) => product.id === 471749168);
   assert.ok(gunz);
   assert.match(gunz.slug, /heavyweight/);
   const structured = productData(applyCatalogPolicy(gunz)!);
-  assert.equal(structured.name, "Gunz-n-Roses Men's tee");
+  const title = RETITLED[471749168];
+  assert.equal(structured.name, title);
+  assert.equal(
+    structured.url,
+    `https://hustlerdior.com/products/${productSlug(title, gunz.id)}`,
+  );
+  assert.equal(structured.offers?.name, title);
   assert.doesNotMatch(structured.description, /\bheavyweight\b/i);
+  assert.equal(structured.hasVariant[0]?.name, `${title} / Maroon / S`);
+  assert.equal(structured.hasVariant[0]?.offers?.name, `${title} / Maroon / S`);
   for (const variant of structured.hasVariant) {
     assert.doesNotMatch(variant.name, /\bheavyweight\b/i);
+    assert.equal(variant.offers?.name, variant.name);
+    assert.match(variant.url, /gunz-n-roses-men-s-classic-tee-471749168/);
   }
-  assert.equal(
-    structured.hasVariant[0]?.name,
-    "Gunz-n-Roses Men's tee / Maroon / S",
-  );
 });

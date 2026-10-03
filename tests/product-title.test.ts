@@ -54,13 +54,20 @@ test("snapshot product titles stay name-led and unique", () => {
     471749171, 471749172, 471749183, 471749186, 471749188, 471749191, 471749193,
     471749195,
   ];
-  for (const id of plainMens) assert.equal(titles.get(id), `Men's tee · ${id}`);
-  assert.equal(titles.get(471749182), "SwerveGang Purp Men's tee");
-  assert.equal(titles.get(471749168), "Gunz-n-Roses Men's tee");
+  for (const id of plainMens)
+    assert.equal(titles.get(id), `Men's heavyweight tee · ${id}`);
+  assert.equal(titles.get(471749167), "YUM YUM DRIP Classic Tee");
+  assert.equal(titles.get(471749169), "YUM YUM DRIP B&W Classic Tee");
+  assert.equal(titles.get(471749182), "SwerveGang Purp Men's Classic Tee");
+  assert.equal(titles.get(471749168), "Gunz-n-Roses Men's Classic Tee");
   assert.equal(titles.get(471749200), "No Menace Tee");
-  assert.equal(titles.get(471749219), "Don't B A Menace Tees tee");
-  for (const id of [471749168, 471749182, 471749200, 471749219, ...plainMens])
+  assert.equal(titles.get(471749219), "Don't B A Menace Tees Classic Tee");
+  for (const id of [
+    471749167, 471749168, 471749169, 471749182, 471749200, 471749219,
+  ])
     assert.doesNotMatch(String(titles.get(id)), /\bheavyweight\b/i);
+  for (const id of plainMens)
+    assert.match(String(titles.get(id)), /\bheavyweight\b/i);
   assert.equal(titles.get(471749062)?.includes("TeeUnisex"), false);
   assert.match(String(titles.get(471749062)), /Virginia Legends/);
   for (const title of titles.values()) {

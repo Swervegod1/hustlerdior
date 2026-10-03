@@ -158,6 +158,7 @@ function aggregateAvailability(stocks: StockStatus[]) {
 
 type SchemaOffer = {
   "@type": "Offer";
+  name: string;
   url: string;
   priceCurrency: string;
   price: string;
@@ -166,6 +167,7 @@ type SchemaOffer = {
 
 type SchemaAggregateOffer = {
   "@type": "AggregateOffer";
+  name: string;
   url: string;
   priceCurrency: string;
   lowPrice: string;
@@ -181,10 +183,15 @@ function variantSchemaName(product: Product, variant: ProductVariant) {
   return `${override} / ${variant.color} / ${variant.size}`;
 }
 
-function offerFor(variant: ProductVariant, url: string): SchemaOffer {
+function offerFor(
+  variant: ProductVariant,
+  url: string,
+  name: string,
+): SchemaOffer {
   const availability = offerAvailability(variant.stock);
   return {
     "@type": "Offer",
+    name,
     url,
     priceCurrency: variant.currency,
     price: schemaPrice(variant.priceCents),
@@ -205,7 +212,11 @@ export function productOffers(
   const path = `/products/${product.slug}`;
   if (priced.length === 1) {
     const variant = priced[0];
-    return offerFor(variant, absoluteUrl(`${path}?variant=${variant.id}`));
+    return offerFor(
+      variant,
+      absoluteUrl(`${path}?variant=${variant.id}`),
+      variantSchemaName(product, variant),
+    );
   }
   const currency = priced[0].currency;
   if (priced.some((variant) => variant.currency !== currency)) return undefined;
@@ -215,6 +226,7 @@ export function productOffers(
   );
   return {
     "@type": "AggregateOffer",
+    name: displayTitle(product.id, product.name),
     url: absoluteUrl(path),
     priceCurrency: currency,
     lowPrice: schemaPrice(Math.min(...prices)),
@@ -293,7 +305,7 @@ export function productData(product: Product, facts?: CatalogFacts | null) {
     hasVariant: product.variants.map((variant) => {
       const url = absoluteUrl(`${path}?variant=${variant.id}`);
       const variantOffer = isPriced(variant)
-        ? offerFor(variant, url)
+        ? offerFor(variant, url, variantSchemaName(product, variant))
         : undefined;
       return {
         "@type": "Product" as const,
