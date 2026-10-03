@@ -2,6 +2,7 @@
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import type { Product } from "@/lib/types";
+import { displayTitle } from "@/lib/product-title";
 const TryOnDialog = dynamic(() => import("./TryOnDialog"), { ssr: false });
 export default function TryOnButton({
   product,
@@ -19,7 +20,7 @@ export default function TryOnButton({
         type="button"
         className={`tryon-button${compact ? " compact" : ""}`}
         onClick={() => setOpen(true)}
-        aria-label={`Try on ${product.name}`}
+        aria-label={`Try on ${displayTitle(product.id, product.name)}`}
       >
         <svg
           width="16"

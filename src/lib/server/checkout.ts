@@ -1,5 +1,6 @@
 import "server-only";
 import { checkoutSchema, type CheckoutInput } from "../checkout-schema";
+import { unitPriceCents } from "../catalog-policy";
 import { getProduct, getLiveAvailability } from "./printful";
 import { HttpError } from "./http";
 
@@ -15,7 +16,13 @@ export async function buildVerifiedCart(input: CheckoutInput) {
       ReturnType<typeof getProduct>
     >;
     const variant = product?.variants.find((v) => v.id === item.variantId);
-    if (!product || !variant || variant.stock !== "available")
+    const priceCents = product ? unitPriceCents(product, item.variantId) : null;
+    if (
+      !product ||
+      !variant ||
+      priceCents == null ||
+      variant.stock !== "available"
+    )
       throw new HttpError(
         409,
         "A selected size is no longer available. Update your bag.",
@@ -27,7 +34,7 @@ export async function buildVerifiedCart(input: CheckoutInput) {
       );
     lines.push({
       ...item,
-      priceCents: variant.priceCents,
+      priceCents,
       currency: variant.currency,
       name: product.name,
     });

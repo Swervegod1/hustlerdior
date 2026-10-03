@@ -4,7 +4,8 @@ import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useCart } from "@/stores/cart";
 import type { Product } from "@/lib/types";
-import { money, shortName } from "@/lib/format";
+import { money } from "@/lib/format";
+import { displayTitle, storefrontTitle } from "@/lib/product-title";
 import { addOnVariants, selectedAddOn } from "@/lib/merchandising";
 import ProductOptions from "./ProductOptions";
 import TryOnButton from "./TryOnButton";
@@ -56,7 +57,7 @@ export default function CompleteTheLook({
     if (!variant) return;
     setNotice(
       add(product, variant)
-        ? `${shortName(product.name)} added to your bag.`
+        ? `${storefrontTitle(product.id, product.name)} added to your bag.`
         : "This piece could not be added. Check your bag quantities.",
     );
   }
@@ -86,12 +87,12 @@ export default function CompleteTheLook({
               type="button"
               className="addon-image"
               onClick={() => setSelected(product)}
-              aria-label={`Choose ${product.name}`}
+              aria-label={`Choose ${displayTitle(product.id, product.name)}`}
             >
               {(variant?.image || product.image) && (
                 <Image
                   src={(variant?.image || product.image)!}
-                  alt={product.name}
+                  alt={displayTitle(product.id, product.name)}
                   fill
                   sizes="110px"
                 />
@@ -99,7 +100,7 @@ export default function CompleteTheLook({
             </button>
             <div className="addon-info">
               <span className="addon-category">{product.category}</span>
-              <h4>{shortName(product.name)}</h4>
+              <h4>{storefrontTitle(product.id, product.name)}</h4>
               <p>
                 {variant
                   ? money(variant.priceCents, product.currency)
@@ -110,7 +111,9 @@ export default function CompleteTheLook({
                   className="addon-variant-label"
                   htmlFor={`addon-variant-${placement}-${product.id}`}
                 >
-                  <span className="sr-only">Options for {product.name}</span>
+                  <span className="sr-only">
+                    Options for {displayTitle(product.id, product.name)}
+                  </span>
                   <select
                     id={`addon-variant-${placement}-${product.id}`}
                     value={variant?.id ?? ""}
@@ -140,8 +143,8 @@ export default function CompleteTheLook({
                 onClick={() => quickAdd(product)}
                 aria-label={
                   variant
-                    ? `Add ${product.name}, ${variant.color}, ${variant.size} to bag`
-                    : `Choose options for ${product.name} before adding`
+                    ? `Add ${displayTitle(product.id, product.name)}, ${variant.color}, ${variant.size} to bag`
+                    : `Choose options for ${displayTitle(product.id, product.name)} before adding`
                 }
               >
                 {variant

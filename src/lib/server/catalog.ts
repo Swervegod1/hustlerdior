@@ -8,16 +8,21 @@ import {
   productSlug,
 } from "../normalize";
 import { cache } from "react";
+import { applyCatalogPolicy, REMOVED_PRODUCT_IDS } from "../catalog-policy";
 import { catalogUsesSnapshot } from "../env";
 
 export async function initialCatalog(): Promise<CatalogPage | null> {
   if (catalogUsesSnapshot()) {
     const snapshot = (await import("@/data/catalog-snapshot.json")).default;
+    const products = (snapshot.products as Product[]).flatMap((product) => {
+      const next = applyCatalogPolicy(product);
+      return next ? [next] : [];
+    });
     return {
-      products: snapshot.products as Product[],
+      products,
       paging: {
-        total: snapshot.products.length,
-        limit: snapshot.products.length,
+        total: products.length,
+        limit: products.length,
         offset: 0,
         nextOffset: null,
       },
@@ -35,7 +40,8 @@ export const productForPage = cache(
   async (id: number): Promise<Product | null> => {
     if (catalogUsesSnapshot()) {
       const snapshot = (await import("@/data/catalog-snapshot.json")).default;
-      return (snapshot.products as Product[]).find((p) => p.id === id) ?? null;
+      const product = (snapshot.products as Product[]).find((p) => p.id === id);
+      return product ? applyCatalogPolicy(product) : null;
     }
     return getProduct(id);
   },
@@ -50,14 +56,11 @@ export type ProductIndexEntry = Pick<
 export const productIndex = cache(async (): Promise<ProductIndexEntry[]> => {
   if (catalogUsesSnapshot()) {
     const snapshot = (await import("@/data/catalog-snapshot.json")).default;
-    return (snapshot.products as Product[]).map(
-      ({ id, name, slug, category, audience }) => ({
-        id,
-        name,
-        slug,
-        category,
-        audience,
-      }),
+    return (snapshot.products as Product[]).flatMap(
+      ({ id, name, slug, category, audience }) =>
+        REMOVED_PRODUCT_IDS.has(id)
+          ? []
+          : [{ id, name, slug, category, audience }],
     );
   }
   const products = new Map<number, ProductIndexEntry>();
@@ -69,7 +72,7 @@ export const productIndex = cache(async (): Promise<ProductIndexEntry[]> => {
       ),
     );
     for (const p of page.result) {
-      if (!p.is_ignored)
+      if (!p.is_ignored && !REMOVED_PRODUCT_IDS.has(p.id))
         products.set(p.id, {
           id: p.id,
           name: p.name,

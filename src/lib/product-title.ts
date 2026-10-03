@@ -1,5 +1,7 @@
-const GLUED_AUDIENCE =
-  /([A-Za-z0-9])((?:Unisex|Men['’]s|Women['’]s)\b)/;
+import { shortName } from "./format";
+import { titleOverrideFor } from "./title-overrides";
+
+const GLUED_AUDIENCE = /([A-Za-z0-9])((?:Unisex|Men['’]s|Women['’]s)\b)/;
 
 const GARMENT_NOUN =
   /\b(?:tees?|t-shirts?|shirts?|hoodies?|sweatshirts?|tanks?|jerseys?|pullovers?|crews?)\b/i;
@@ -67,6 +69,16 @@ const BLANK_WORDS = new Set([
 
 const NAME_BUDGET = 70;
 
+/** Page title, H1, and JSON-LD name. An override replaces the Printful name. */
+export function displayTitle(id: number, name: string) {
+  return titleOverrideFor(id) ?? name;
+}
+
+/** Card and rail label. Overrides stay intact; other names keep the short form. */
+export function storefrontTitle(id: number, name: string) {
+  return titleOverrideFor(id) ?? shortName(name);
+}
+
 export type TitledProduct = { id: number; name: string };
 
 /**
@@ -128,7 +140,7 @@ export function presentProductTitle(name: string) {
 export function catalogDocumentTitles(products: TitledProduct[]) {
   const prepared = products.map((product) => ({
     id: product.id,
-    title: presentProductTitle(product.name),
+    title: titleOverrideFor(product.id) ?? presentProductTitle(product.name),
   }));
   const counts = new Map<string, number>();
   for (const product of prepared) {

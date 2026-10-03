@@ -1,3 +1,4 @@
+import { displayTitle } from "./product-title";
 import type { Product, ProductVariant, StockStatus } from "./types";
 
 export const CANONICAL_ORIGIN = "https://hustlerdior.com";
@@ -220,7 +221,7 @@ export function listingProductData(product: Product) {
   const offers = productOffers(product);
   return {
     "@type": "Product" as const,
-    name: product.name,
+    name: displayTitle(product.id, product.name),
     url: absoluteUrl(`/products/${product.slug}`),
     ...(product.image ? { image: [product.image] } : {}),
     brand: { "@type": "Brand" as const, name: "Hustler Dior" },
@@ -259,8 +260,11 @@ export function productData(product: Product, facts?: CatalogFacts | null) {
     "@type": "ProductGroup",
     "@id": `${absoluteUrl(path)}#product`,
     url: absoluteUrl(path),
-    name: product.name,
-    description: productDescription(product),
+    name: displayTitle(product.id, product.name),
+    description: productDescription({
+      ...product,
+      name: displayTitle(product.id, product.name),
+    }),
     productGroupID: `HD-${product.id}`,
     brand: { "@type": "Brand", name: "Hustler Dior" },
     category: product.category,
