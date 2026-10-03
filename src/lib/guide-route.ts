@@ -4,6 +4,10 @@ export const GUIDE_SLUGS = [
   "veteran-owned-streetwear-brand-story",
   "concrete-edit-90s-bootleg-graphic-tees",
   "how-to-wash-graphic-tees",
+  "garment-dyed-vs-pigment-dyed-streetwear-tees",
+  "graphic-tee-color-combinations",
+  "how-to-remove-lint-and-pilling-from-hoodies",
+  "how-to-style-oversized-boxy-tees-with-baggy-pants",
 ] as const;
 
 export type GuideSlug = (typeof GUIDE_SLUGS)[number];

@@ -13,6 +13,33 @@ import {
 import { collections } from "@/lib/collections";
 import JsonLd from "@/components/JsonLd";
 import { metadata as notFoundMetadata } from "@/app/not-found";
+import snapshot from "@/data/catalog-snapshot.json";
+import { catalogDocumentTitles } from "@/lib/product-title";
+import type { Product } from "@/lib/types";
+
+const titlePeers = (snapshot.products as Product[]).map((product) => ({
+  id: product.id,
+  name: product.name,
+}));
+
+function catalogFor(product: Product) {
+  return titlePeers.some((item) => item.id === product.id)
+    ? titlePeers.map((item) =>
+        item.id === product.id
+          ? { id: product.id, name: product.name }
+          : item,
+      )
+    : [...titlePeers, { id: product.id, name: product.name }];
+}
+
+function withDocumentTitle(product: Product): Product {
+  return {
+    ...product,
+    name:
+      catalogDocumentTitles(catalogFor(product)).get(product.id) ??
+      product.name,
+  };
+}
 
 async function resolve(slug: string) {
   await connection();
@@ -30,21 +57,22 @@ export async function generateMetadata({
   // Throw notFound() only from the page. Doing it here renders Next's empty
   // __next_error__ shell instead of the not-found document.
   if (!product) return notFoundMetadata;
+  const titled = withDocumentTitle(product);
   return {
-    title: product.name,
-    description: productDescription(product),
+    title: titled.name,
+    description: productDescription(titled),
     alternates: { canonical: absoluteUrl(`/products/${product.slug}`) },
     openGraph: {
-      title: product.name,
-      description: productDescription(product),
+      title: titled.name,
+      description: productDescription(titled),
       url: absoluteUrl(`/products/${product.slug}`),
       type: "website",
-      images: product.image ? [{ url: product.image, alt: product.name }] : [],
+      images: product.image ? [{ url: product.image, alt: titled.name }] : [],
     },
     twitter: {
       card: "summary_large_image",
-      title: product.name,
-      description: productDescription(product),
+      title: titled.name,
+      description: productDescription(titled),
       images: product.image ? [product.image] : [],
     },
   };
@@ -62,6 +90,7 @@ export default async function ProductPage({
   const { slug } = await params;
   const product = await resolve(slug);
   if (!product) notFound();
+  const titled = withDocumentTitle(product);
   if (slug !== product.slug) permanentRedirect(`/products/${product.slug}`);
   const query = await searchParams;
   const variantId =
@@ -84,7 +113,7 @@ export default async function ProductPage({
     ...(collection
       ? [{ name: collection.name, path: `/collections/${collection.slug}` }]
       : []),
-    { name: product.name, path: `/products/${product.slug}` },
+    { name: titled.name, path: `/products/${product.slug}` },
   ];
   return (
     <main id="main" className="product-page">
@@ -102,13 +131,13 @@ export default async function ProductPage({
       </nav>
       <ProductOptions
         key={`${product.id}-${variantId ?? "default"}-${initialColor ?? "default"}`}
-        product={product}
+        product={titled}
         initialVariantId={variantId}
         initialColor={initialColor}
         page
       />
       <section className="reading-panel product-reading">
-        <p>{productDescription(product)}</p>
+        <p>{productDescription(titled)}</p>
         <h2>FIND YOUR FIT.</h2>
         <p>
           Each color can have a different size range. Choose both before adding
@@ -119,7 +148,7 @@ export default async function ProductPage({
         <span> · </span>
         <Link href="/help">Ordering information ↗</Link>
       </section>
-      <JsonLd data={productData(product)} />
+      <JsonLd data={productData(titled)} />
       <JsonLd data={breadcrumbData(crumbs)} />
     </main>
   );
