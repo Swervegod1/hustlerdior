@@ -1,5 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { guideSlugAction, unknownGuideHtml } from "@/lib/guide-route";
+import {
+  collectionPathAction,
+  orderPathAction,
+} from "@/lib/collection-route";
+import {
+  guideSlugAction,
+  unavailablePageHtml,
+  unknownGuideHtml,
+} from "@/lib/guide-route";
 import {
   CANONICAL_ORIGIN,
   isProductionHost,
@@ -40,20 +48,38 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(target, 308);
   }
 
+  const origin = publicOrigin(request, hostname || request.nextUrl.host);
   const guide = guideSlugAction(request.nextUrl.pathname);
   if (guide.kind === "redirect") {
-    return NextResponse.redirect(
-      new URL(
-        guide.pathname,
-        publicOrigin(request, hostname || request.nextUrl.host),
-      ),
-      301,
-    );
+    return NextResponse.redirect(new URL(guide.pathname, origin), 301);
   }
   if (guide.kind === "not-found") {
-    // notFound() behind loading.tsx flushes HTTP 200 with the root (home) title.
-    // End the request here so unknown guide slugs are a real 404.
+    // Unknown guide slugs end here so they never render the homepage shell.
     return new NextResponse(unknownGuideHtml(), {
+      status: 404,
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "X-Robots-Tag": "noindex, nofollow",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+
+  const collection = collectionPathAction(request.nextUrl.pathname);
+  if (collection.kind === "redirect") {
+    const target = new URL(collection.pathname, origin);
+    target.search = request.nextUrl.search;
+    return NextResponse.redirect(target, 301);
+  }
+  if (
+    collection.kind === "not-found" ||
+    orderPathAction(request.nextUrl.pathname).kind === "not-found"
+  ) {
+    const link =
+      collection.kind === "not-found"
+        ? { href: "/collections/tees", label: "Tees & tops" }
+        : { href: "/", label: "Home" };
+    return new NextResponse(unavailablePageHtml(link), {
       status: 404,
       headers: {
         "content-type": "text/html; charset=utf-8",

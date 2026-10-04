@@ -39,7 +39,16 @@ export function guideSlugAction(
   return { kind: "not-found" };
 }
 
-export function unknownGuideHtml() {
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/** One robots meta, its own title, and no homepage description. */
+export function unavailablePageHtml(link: { href: string; label: string }) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,8 +61,12 @@ export function unknownGuideHtml() {
 <main>
 <p>404 / OFF THE GRID</p>
 <h1>This piece moved on.</h1>
-<p><a href="/guides">All guides</a></p>
+<p><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a></p>
 </main>
 </body>
 </html>`;
+}
+
+export function unknownGuideHtml() {
+  return unavailablePageHtml({ href: "/guides", label: "All guides" });
 }

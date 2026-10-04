@@ -7,14 +7,15 @@ import helpFaq from "@/data/faq-help.json";
 import { absoluteUrl } from "@/lib/seo";
 import { checkoutConfigured } from "@/lib/env";
 
+const title = "Streetwear Ordering, Sizing & Printful Production";
 const description =
-  "Answers about the Hustler Dior collection, Printful production, size availability, saved shopping bags and the current online checkout status.";
+  "Ordering, sizing, and production answers for Hustler Dior streetwear. Pieces are made to order through Printful, with size and color availability, bags saved in this browser, and the current checkout status.";
 export const metadata: Metadata = {
-  title: "Ordering Information & Answers",
+  title,
   description,
   alternates: { canonical: absoluteUrl("/help") },
   openGraph: {
-    title: "Hustler Dior Ordering Information",
+    title: `${title} | Hustler Dior`,
     description,
     url: absoluteUrl("/help"),
   },

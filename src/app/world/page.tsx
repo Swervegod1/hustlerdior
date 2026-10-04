@@ -5,14 +5,15 @@ import { Arrow } from "@/components/Icons";
 import { absoluteUrl, breadcrumbData } from "@/lib/seo";
 import { BRAND_LINKS, brandAnswers } from "@/lib/brand";
 
+const title = "Creative World: Streetwear, Archive & Crown & Concrete";
 const description =
-  "Explore the world of Hustler Dior: independent streetwear, creative direction by Swerve God, Crown & Concrete, and the brand’s original creative archive.";
+  "Independent streetwear, creative direction by Swerve God, the Crown & Concrete collection, and the original Hustler Dior archive.";
 export const metadata: Metadata = {
-  title: "The World of Hustler Dior",
+  title,
   description,
   alternates: { canonical: absoluteUrl("/world") },
   openGraph: {
-    title: "MORE THAN A WARDROBE. | Hustler Dior",
+    title: `${title} | Hustler Dior`,
     description,
     url: absoluteUrl("/world"),
   },
