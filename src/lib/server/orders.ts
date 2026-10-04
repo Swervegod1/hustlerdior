@@ -1,6 +1,6 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
-import { z } from "zod";
+import { printfulEstimateSchema } from "../printful-estimate";
 import { database, consumeUsage } from "./database";
 import { buildVerifiedCart } from "./checkout";
 import { printfulRequest } from "./printful";
@@ -108,7 +108,10 @@ export async function loadOrder(
   return row;
 }
 
-export async function recoverOrder(id: string, metadata: Record<string, string>) {
+export async function recoverOrder(
+  id: string,
+  metadata: Record<string, string>,
+) {
   try {
     return await loadOrder(id);
   } catch (error) {
@@ -128,23 +131,6 @@ export async function recoverOrder(id: string, metadata: Record<string, string>)
   await saveOrder(record);
   return record;
 }
-const cost = z
-  .string()
-  .regex(/^\d+(\.\d{1,2})?$/)
-  .transform((value) => {
-    const [whole, fraction = ""] = value.split(".");
-    return Number(whole) * 100 + Number(fraction.padEnd(2, "0"));
-  })
-  .pipe(z.number().int().nonnegative().max(10_000_000));
-const estimateSchema = z.object({
-  result: z.object({
-    costs: z.object({
-      currency: z.literal("USD"),
-      shipping: cost,
-      total: cost,
-    }),
-  }),
-});
 export async function quoteOrder(input: unknown, owner: string) {
   if (!checkoutConfigured())
     throw new HttpError(
@@ -163,7 +149,7 @@ export async function quoteOrder(input: unknown, owner: string) {
   const verified = await buildVerifiedCart(cart);
   if (verified.currency !== "USD")
     throw new HttpError(409, "These pieces cannot use this checkout currency.");
-  const estimate = estimateSchema.parse(
+  const estimateResult = printfulEstimateSchema.safeParse(
     await printfulRequest("/orders/estimate-costs", {
       method: "POST",
       body: {
@@ -176,7 +162,13 @@ export async function quoteOrder(input: unknown, owner: string) {
         retail_costs: { currency: "USD" },
       },
     }),
-  ).result.costs;
+  );
+  if (!estimateResult.success)
+    throw new HttpError(
+      502,
+      "Delivery pricing is temporarily unavailable. Please try again shortly.",
+    );
+  const estimate = estimateResult.data.result.costs;
   const margin = contribution(
     verified.subtotalCents,
     estimate.total,
