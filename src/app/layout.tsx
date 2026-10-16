@@ -90,6 +90,7 @@ gtag('config', 'G-F05DW777H4');`,
               ))}
               <Link href="/guides">Guides</Link>
               <Link href="/about">About Hustler Dior</Link>
+              <Link href="/tech4help">Tech4Help community</Link>
               <Link href="/world">The creative world</Link>
               <Link href="/fit-guide">Fit guide</Link>
               <Link href="/help">Ordering information</Link>
