@@ -87,6 +87,31 @@ export default function Privacy() {
         the order. Card details are entered on Stripe’s hosted payment page and
         are not stored by this storefront.
       </p>
+      <h2 id="site-analytics">SITE ANALYTICS</h2>
+      <p>
+        We use Google Analytics to understand how visitors find and use this
+        storefront, such as which pages are viewed, which pieces are added to a
+        bag and whether a checkout completes. Google Analytics uses cookies and
+        similar identifiers set by Google on your browser. We send order
+        references and amounts, never your name, email, address or payment
+        details. You can learn{" "}
+        <a
+          href="https://www.google.com/policies/privacy/partners/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          how Google uses information from sites that use its services
+        </a>{" "}
+        and opt out with the{" "}
+        <a
+          href="https://tools.google.com/dlpage/gaoptout"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Google Analytics opt-out browser add-on
+        </a>
+        {"."}
+      </p>
     </ReadingPage>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { purchaseInputFromResponse, trackPurchase } from "@/lib/analytics";
 const messages: Record<string, { title: string; text: string }> = {
   expired: {
     title: "THIS CHECKOUT EXPIRED.",
@@ -49,6 +50,12 @@ export default function OrderStatus({ id }: { id: string }) {
           throw new Error(data.error || "Order status is unavailable.");
         setStatus(data.status);
         setError("");
+        try {
+          const purchase = purchaseInputFromResponse(data);
+          if (purchase?.id === id) trackPurchase(purchase);
+        } catch {
+          // Measurement must not block payment confirmation.
+        }
         polls++;
         if (
           ![

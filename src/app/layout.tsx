@@ -18,6 +18,7 @@ import { requestPublicHost } from "@/lib/request-host";
 import { absoluteUrl, isIndexable, robotsMetadata } from "@/lib/seo";
 import { collections } from "@/lib/collections";
 import StyleDesk from "@/components/StyleDesk";
+import { GA_MEASUREMENT_ID, gaInitScript, gaLoaderSrc } from "@/lib/analytics";
 
 export async function generateMetadata(): Promise<Metadata> {
   await connection();
@@ -55,18 +56,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-F05DW777H4" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-F05DW777H4');`,
-          }}
-        />
-      </head>
       <body>
+        {/* Native snippet so the tag is in the production HTML and window.gtag
+            exists before hydration. next/script afterInteractive is omitted
+            from that HTML and runs too late for the first events. */}
+        <script async src={gaLoaderSrc(GA_MEASUREMENT_ID)} />
+        <script
+          id="ga4-config"
+          dangerouslySetInnerHTML={{ __html: gaInitScript() }}
+        />
         <a className="skip-link" href="#main">
           Skip to content
         </a>

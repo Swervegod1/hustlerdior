@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useCart, useUI } from "@/stores/cart";
 import { money } from "@/lib/format";
+import { trackBeginCheckout } from "@/lib/analytics";
 import type { Recipient } from "@/lib/checkout-schema";
 import type { PublicQuote } from "@/lib/commerce-schema";
 import { Arrow } from "./Icons";
@@ -99,6 +100,16 @@ export default function CheckoutForm({ enabled }: { enabled: boolean }) {
         url.password
       )
         throw new Error("Checkout could not be opened.");
+      trackBeginCheckout({
+        currency: current.currency,
+        subtotalCents: current.subtotalCents,
+        items: current.lines.map((line) => ({
+          itemId: String(line.variantId),
+          itemName: line.name,
+          priceCents: line.priceCents,
+          quantity: line.quantity,
+        })),
+      });
       window.location.assign(url.href);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Please try again.");
@@ -121,7 +132,9 @@ export default function CheckoutForm({ enabled }: { enabled: boolean }) {
         <div className="checkout-readiness" role="status">
           <span aria-hidden="true">✳</span>
           <p>
-            <strong>Online payment is not configured on this storefront.</strong>{" "}
+            <strong>
+              Online payment is not configured on this storefront.
+            </strong>{" "}
             Delivery quotes and Stripe checkout stay unavailable until Stripe
             keys are set on the host. Your bag stays saved on this device.
           </p>
