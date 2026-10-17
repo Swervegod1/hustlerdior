@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { money } from "@/lib/format";
 import { useCart, useUI } from "@/stores/cart";
+import { trackViewItem } from "@/lib/analytics";
 import { sound } from "@/lib/audio";
 import { Arrow } from "./Icons";
 import TryOnButton from "./TryOnButton";
@@ -46,6 +47,12 @@ export default function ProductOptions({
   const colors = [...new Set(product.variants.map((v) => v.color))];
   const add = useCart((s) => s.add);
   const Heading = page ? "h1" : "h2";
+  const viewedProduct = useRef<number | null>(null);
+  useEffect(() => {
+    if (!page || !display || viewedProduct.current === product.id) return;
+    viewedProduct.current = product.id;
+    trackViewItem(product, display);
+  }, [page, product, display]);
   async function addToBag() {
     if (!selected) {
       setMessage("Choose a size to add this piece.");

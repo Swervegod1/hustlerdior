@@ -4,6 +4,7 @@ import { persist } from "zustand/middleware";
 import { z } from "zod";
 import type { CartLine, Product, ProductVariant } from "@/lib/types";
 import { safeImage } from "@/lib/normalize";
+import { trackAddToCart } from "@/lib/analytics";
 
 const persistedLine = z.object({
   productId: z.number().int().positive(),
@@ -62,6 +63,7 @@ export const useCart = create<CartStore>()(
                 },
               ],
         }));
+        trackAddToCart(product, variant);
         return true;
       },
       quantity(id, quantity) {
