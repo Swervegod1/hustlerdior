@@ -44,7 +44,7 @@ export default function DropCalendar() {
         )}
         <div className="drop-calendar-links">
           <Link href="/releases">THE RELEASE CALENDAR ↗</Link>
-          <a href="#collection">SHOP CURRENT PIECES ↗</a>
+          <a href="/#collection">SHOP CURRENT PIECES ↗</a>
         </div>
       </div>
     </section>

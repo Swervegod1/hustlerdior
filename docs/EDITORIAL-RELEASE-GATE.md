@@ -12,11 +12,13 @@
 ## Blocking P0 release requirements
 1. Verify Hostinger rollback artifact and a dated **database and files backup**. A Git commit is not a backup of live data; current Hostinger server deployment is from a September 22 archive.
 2. Record current deployed SHA / build contents and reconciliation of paid Stripe events to internal paid orders and Printful drafts. Do not send production orders or replay live webhooks as a test.
+
+   **Confirmed November 3 Hostinger data:** website `hustlerdior.com`, username `u656718443`, Node 22 / Next.js, last build from `Hustler-Dior-Hostinger-Source.zip` on September 22, 2026. The running production SHA is **unknown** because the deployment source is an archive, not Git; do not claim that main/branch code matches production. The current masked environment-key inventory does **not** contain `DATABASE_URL`; the Hostinger account cron-job list is empty. Neither confirms absence of an external database or worker, but a durable payment-to-fulfillment pathway is **not verified**. This deployment blocker must be resolved before release.
 3. Owner must approve explicit shipping / returns / terms / support facts. Current `/shipping`, `/returns`, `/terms`, `/contact` were 404 in the November 3 audit. These pages remain out of scope for unapproved publication.
 4. Verify persisted production DB and payment-worker schedule, draft review owner, exception alert and idempotency.
 5. Validate rights/license status of featured products and any future model-in-context assets. No model imagery was supplied; the hero reuses existing catalog product assets.
 6. Verify full fulfillment and Stripe **test-mode** regression with mocked Printful approval, then browser QA on touch and keyboard.
-7. Run `npm ci`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:server` and `npm run build`; inspect CI and staged page screenshots.
+7. Run `npm ci`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:server` and `npm run build`; inspect CI and staged page screenshots. GitHub Actions run 41744829545 failed **before any runner was assigned** (runner ID 0, no steps, zero compute milliseconds); this is not evidence that TypeScript/lint/tests failed. GitHub runner allocation/permissions/status must be checked and CI rerun until there is a real passing test job.
 8. Only then deploy to `hustlerdior.com`; perform post-release `/api/health`, product page, cart, quote, webhook and monitoring checks. No unapproved live payment or fulfillment changes.
 
 **Release status:** NOT CLEARED until every blocking requirement is verified. CI alone does not clear the production gate.
