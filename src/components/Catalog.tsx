@@ -7,23 +7,35 @@ import ProductCard from "./ProductCard";
 import ProductOptions from "./ProductOptions";
 import { Arrow, Close } from "./Icons";
 
-export default function Catalog({ initial }: { initial: CatalogPage | null }) {
+export default function Catalog({
+  initial,
+  initialCategory = "Tees",
+}: {
+  initial: CatalogPage | null;
+  initialCategory?: string;
+}) {
   const [products, setProducts] = useState(initial?.products ?? []);
   const [next, setNext] = useState(
     initial?.paging.nextOffset ?? (initial ? null : 0),
   );
   const [error, setError] = useState("");
   const [retry, setRetry] = useState(0);
-  const [category, setCategory] = useState("All pieces");
+  const [category, setCategory] = useState(initialCategory);
   const [query, setQuery] = useState("");
   const [visible, setVisible] = useState(12);
   const [selected, setSelected] = useState<Product | null>(null);
-  const [sort, setSort] = useState("latest");
+  const [sort, setSort] = useState("featured");
   const [size, setSize] = useState("");
-  const [availableOnly, setAvailableOnly] = useState(false);
+  const availableOnly = Boolean(size);
   const [selectedColor, setSelectedColor] = useState<string | undefined>();
   const sizes = [
-    ...new Set(products.flatMap((p) => p.variants.map((v) => v.size))),
+    ...new Set(
+      products
+        .filter((p) => category === "All pieces" || p.category === category)
+        .flatMap((p) =>
+          p.variants.filter((v) => v.stock === "available").map((v) => v.size),
+        ),
+    ),
   ].sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
   const trigger = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
@@ -70,7 +82,9 @@ export default function Catalog({ initial }: { initial: CatalogPage | null }) {
       ? list.toSorted((a, b) => a.priceCents - b.priceCents)
       : sort === "high"
         ? list.toSorted((a, b) => b.priceCents - a.priceCents)
-        : list;
+        : sort === "latest"
+          ? list.toSorted((a, b) => b.id - a.id)
+          : list;
   }, [products, category, query, sort, size, availableOnly]);
   function select(product: Product, color?: string) {
     trigger.current =
@@ -86,68 +100,31 @@ export default function Catalog({ initial }: { initial: CatalogPage | null }) {
       className="catalog-section"
       aria-labelledby="collection-heading"
     >
-      <div className="section-topline">
-        <span>THE WARDROBE / VOLUME 01</span>
-        <span>YOUR NEXT SIGNATURE PIECE.</span>
-      </div>
-      <div className="collection-heading">
+      <div className="chrome-toolbar">
         <h2 id="collection-heading">
-          THE COLLECTION<span>({products.length || "—"})</span>
+          {category === "Tees" ? "GRAPHIC TEES" : "THE COLLECTION"}
         </h2>
-        <p>
-          Heavy on expression.
-          <br />
-          Made for your everyday.
-        </p>
-      </div>
-      <div className="catalog-toolbar">
-        <div
-          className="filter-tabs"
-          role="group"
-          aria-label="Filter collection"
-        >
-          {[
-            "All pieces",
-            "Tees",
-            "Layers",
-            "Bottoms",
-            "Accessories",
-            "Women",
-            "Men",
-          ].map((c) => (
-            <button
-              type="button"
-              key={c}
-              className={category === c ? "active" : ""}
-              aria-pressed={category === c}
-              onClick={() => {
-                setCategory(c);
-                setVisible(12);
-              }}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-        <div className="catalog-search">
-          <label className="sr-only" htmlFor="search-pieces">
-            Search pieces
-          </label>
-          <input
-            id="search-pieces"
-            type="search"
-            placeholder="Find your piece"
-            value={query}
+        <label>
+          <span className="sr-only">Product category</span>
+          <select
+            aria-label="Product category"
+            value={category}
             onChange={(e) => {
-              setQuery(e.target.value);
+              setCategory(e.target.value);
               setVisible(12);
             }}
-          />
-        </div>
-      </div>
-      <div className="catalog-refine">
+          >
+            <option value="Tees">All tees</option>
+            <option value="All pieces">All products</option>
+            {[...new Set(products.map((p) => p.category))]
+              .filter((c) => c !== "Tees")
+              .map((c) => (
+                <option key={c}>{c}</option>
+              ))}
+          </select>
+        </label>
         <label>
-          YOUR SIZE{" "}
+          <span className="sr-only">Available size</span>
           <select
             aria-label="Filter by size"
             value={size}
@@ -158,57 +135,54 @@ export default function Catalog({ initial }: { initial: CatalogPage | null }) {
           >
             <option value="">All sizes</option>
             {sizes.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
+              <option key={s}>{s}</option>
             ))}
           </select>
         </label>
-        <label className="availability-filter">
-          <input
-            type="checkbox"
-            checked={availableOnly}
-            onChange={(e) => {
-              setAvailableOnly(e.target.checked);
-              setVisible(12);
-            }}
-          />{" "}
-          Available to order
-        </label>
-        {(size || availableOnly || query || category !== "All pieces") && (
-          <button
-            type="button"
-            onClick={() => {
-              setSize("");
-              setAvailableOnly(false);
-              setQuery("");
-              setCategory("All pieces");
-              setVisible(12);
-            }}
-          >
-            CLEAR FILTERS ×
-          </button>
-        )}
-      </div>
-      <div className="catalog-meta">
-        <span aria-live="polite">
-          {next !== null && !error
-            ? "LOADING COLLECTION…"
-            : `${results.length} ${results.length === 1 ? "PIECE" : "PIECES"}`}
-          {initial?.source === "snapshot" ? " / CATALOG PREVIEW" : ""}
-        </span>
         <label>
-          SORT BY{" "}
+          <span className="sr-only">Sort collection</span>
           <select
+            aria-label="Sort collection"
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            aria-label="Sort collection"
           >
-            <option value="latest">Latest in store</option>
+            <option value="featured">Sort: Featured</option>
+            <option value="latest">Newest</option>
             <option value="low">Price: low to high</option>
             <option value="high">Price: high to low</option>
           </select>
         </label>
+      </div>
+      <div className="chrome-search-row">
+        <label className="sr-only" htmlFor="search-pieces">
+          Search pieces
+        </label>
+        <input
+          id="search-pieces"
+          type="search"
+          placeholder="Search the collection"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setVisible(12);
+          }}
+        />
+        <span role="status">
+          {next !== null && !error
+            ? "Loading collection…"
+            : `${results.length} pieces`}
+        </span>
+        {(query || size) && (
+          <button
+            type="button"
+            onClick={() => {
+              setQuery("");
+              setSize("");
+            }}
+          >
+            Clear filters
+          </button>
+        )}
       </div>
       {error && (
         <div className="catalog-error" role="status">

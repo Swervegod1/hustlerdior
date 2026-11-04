@@ -1,144 +1,39 @@
 import Image from "next/image";
-import Link from "next/link";
-import EditorialHero from "@/components/EditorialHero";
-import DropCalendar from "@/components/DropCalendar";
 import Catalog from "@/components/Catalog";
-import { Arrow } from "@/components/Icons";
 import { initialCatalog } from "@/lib/server/catalog";
 import { connection } from "next/server";
 import type { Metadata } from "next";
-import CollectionLinks from "@/components/CollectionLinks";
 import JsonLd from "@/components/JsonLd";
 import { absoluteUrl } from "@/lib/seo";
-import StudioArtifact from "@/components/StudioArtifact";
 import { BRAND_LINKS } from "@/lib/brand";
 
 export const metadata: Metadata = {
   alternates: { canonical: absoluteUrl("/") },
 };
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ collection?: string }>;
+}) {
   await connection();
   const catalog = await initialCatalog();
-  // Editorial slots are opt-in. Do not automatically promote unreviewed
-  // public figures, characters, logos, or other rights-sensitive artwork.
-  const featureId = process.env.APPROVED_EDITORIAL_FEATURE_PRODUCT_ID;
-  const secondaryId = process.env.APPROVED_EDITORIAL_SECONDARY_PRODUCT_ID;
-  const feature =
-    /^\d+$/.test(featureId ?? "")
-      ? catalog?.products.find((p) => String(p.id) === featureId)
-      : undefined;
-  const secondary =
-    /^\d+$/.test(secondaryId ?? "")
-      ? catalog?.products.find((p) => String(p.id) === secondaryId)
-      : undefined;
-  const editorial = feature ?? secondary;
+  const category =
+    (await searchParams).collection === "all" ? "All pieces" : "Tees";
   return (
-    <main id="main" tabIndex={-1}>
-      <EditorialHero
-        feature={feature}
-        secondary={secondary}
-      />
-      <div className="manifesto-strip">
-        <span>MAKE YOUR OWN RULES</span>
-        <span aria-hidden="true">✳</span>
-        <span>WEAR YOUR OWN STORY</span>
-        <span aria-hidden="true">✳</span>
-        <span>HUSTLE IS AN ART FORM</span>
-        <span aria-hidden="true">✳</span>
-      </div>
-      <DropCalendar />
-      <Catalog initial={catalog} />
-      <Link href="/curated" className="extended-entry">
-        <span>BEYOND THE EVERYDAY.</span>
-        <strong>THE EXTENDED EDIT</strong>
-        <span>
-          EXPLORE THE CATALOG PREVIEW <Arrow />
-        </span>
-      </Link>
-      <CollectionLinks products={catalog?.products ?? []} />
-      <section className="seasonal-editorial" aria-label="The Concrete Edit">
-        <span>SEASONAL EDITORIAL / THE CONCRETE EDIT</span>
-        <strong>WEAR THE WORK. NOT THE HYPE.</strong>
-        <Link href="/collections/tees">EXPLORE ORIGINAL TEES ↗</Link>
+    <main id="main" tabIndex={-1} className="chrome-storefront">
+      <section className="chrome-banner" aria-label="Hustler Dior">
+        <h1 className="sr-only">Hustler Dior — Independent Streetwear</h1>
+        <Image
+          src="/brand/chrome-lockup.webp"
+          alt="Hustler Dior crowned HD crest"
+          width={2172}
+          height={724}
+          sizes="100vw"
+          priority
+        />
       </section>
-      <section
-        className="editorial"
-        id="editorial"
-        aria-labelledby="editorial-heading"
-      >
-        <div className="editorial-copy">
-          <p className="eyebrow">THE MANIFESTO / 001</p>
-          <h2 id="editorial-heading">
-            MADE TO
-            <br />
-            MAKE
-            <br />
-            <span>NOISE.</span>
-          </h2>
-          <p>
-            Hustler Dior is for the creators, the risk-takers, and the ones
-            building something of their own. Streetwear with a point of view.
-            Ambition you can wear.
-          </p>
-          <a className="editorial-link" href="#collection">
-            FIND YOUR EXPRESSION <Arrow />
-          </a>
-          <span className="editorial-signature">
-            SWERVE GOD / CREATIVE DIRECTION
-          </span>
-          <Link href="/world" className="editorial-link">
-            EXPLORE OUR CREATIVE WORLD <Arrow />
-          </Link>
-        </div>
-        <div className="culture-board">
-          <div className="editorial-image">
-            {editorial?.image && (
-              <Image
-                src={editorial.image}
-                alt={editorial.name}
-                fill
-                sizes="(max-width: 760px) 44vw, (max-width: 1100px) 40vw, 26vw"
-              />
-            )}
-            <span className="editorial-stamp">
-              WEAR YOUR
-              <br />
-              OWN STORY. ↗
-            </span>
-            <span className="editorial-image-note">
-              HUSTLER DIOR / ORIGINAL COLLECTION
-            </span>
-          </div>
-          <StudioArtifact />
-        </div>
-      </section>
-      <div className="brand-principles">
-        <div>
-          <span>01</span>
-          <p>
-            ORIGINAL
-            <br />
-            <strong>BY DESIGN.</strong>
-          </p>
-        </div>
-        <div>
-          <span>02</span>
-          <p>
-            MADE
-            <br />
-            <strong>TO ORDER.</strong>
-          </p>
-        </div>
-        <div>
-          <span>03</span>
-          <p>
-            WEAR IT
-            <br />
-            <strong>YOUR WAY.</strong>
-          </p>
-        </div>
-      </div>
+      <Catalog key={category} initial={catalog} initialCategory={category} />
       <JsonLd
         data={{
           "@context": "https://schema.org",
