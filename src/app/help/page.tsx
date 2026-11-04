@@ -78,15 +78,17 @@ export default async function Help() {
       {paymentsOpen ? (
         <p>
           Delivery quotes are calculated from your address and bag at checkout.
-          Shipping and returns policies on this page should be reviewed before
-          paying. A quote does not lock inventory or promise a delivery date.
+          Read the <Link href="/shipping">shipping information</Link> and{" "}
+          <Link href="/returns">return guidance</Link>, then{" "}
+          <Link href="/contact">contact the store</Link> with any unanswered
+          questions before paying. A quote does not reserve inventory or promise
+          a delivery date.
         </p>
       ) : (
         <p>
-          Delivery quotes and the store’s shipping and returns policies appear
-          with checkout once Stripe is configured. We are not promising a
-          delivery date or a free-shipping threshold while payment is
-          unavailable.
+          Read the <Link href="/shipping">shipping information</Link> and{" "}
+          <Link href="/returns">return guidance</Link>. The store has not
+          approved a free-shipping threshold or guaranteed delivery date.
         </p>
       )}
       <h2>CAN I FIND WOMEN’S AND MEN’S STREETWEAR HERE?</h2>

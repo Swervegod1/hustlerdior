@@ -7,7 +7,7 @@
       "name": "Is online checkout open?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Payment is not currently collected through this storefront. You can explore pieces, choose variants and save a bag on this device. Delivery quotes and secure payment unlock after Stripe runtime keys are set on the host. No test or live charges are created from missing keys."
+        "text": "Checkout availability is shown on the live checkout page. When enabled, customers can obtain a delivery quote and use Stripe-hosted checkout; browsing or adding to a bag alone creates no payment."
       }
     },
     {
@@ -47,7 +47,7 @@
       "name": "When will shipping and returns be available?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Delivery quotes and the store’s shipping and returns policies appear with checkout once Stripe is configured. We are not promising a delivery date or a free-shipping threshold while payment is unavailable."
+        "text": "See the shipping and returns information pages. Delivery prices depend on the shipping quote for an eligible address; no guaranteed delivery date or free-shipping threshold is advertised."
       }
     },
     {

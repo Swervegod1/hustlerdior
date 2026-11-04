@@ -10,6 +10,7 @@ import "./remix.css";
 import "./refinement.css";
 import "./sales.css";
 import "./growth.css";
+import "./editorial-sprint.css";
 import Navigation from "@/components/Navigation";
 import CartDrawer from "@/components/CartDrawer";
 import { Experience } from "@/components/Experience";
@@ -93,6 +94,10 @@ gtag('config', 'G-F05DW777H4');`,
               <Link href="/world">The creative world</Link>
               <Link href="/fit-guide">Fit guide</Link>
               <Link href="/help">Ordering information</Link>
+              <Link href="/shipping">Shipping details</Link>
+              <Link href="/returns">Returns & damaged items</Link>
+              <Link href="/terms">Sale terms</Link>
+              <Link href="/contact">Contact the store</Link>
               <Link href="/privacy">Photo & shopping privacy</Link>
               <Link href="/#main">Back to top ↑</Link>
             </nav>
