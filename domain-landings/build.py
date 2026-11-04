@@ -1,6 +1,6 @@
 import json, html
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlsplit, urlunsplit, parse_qsl, urlencode
 
 ROOT = Path(__file__).parent
 products = json.loads((ROOT/'catalog.json').read_text())['products'] if (ROOT/'catalog.json').exists() else json.loads(Path('/tmp/products.json').read_text())
@@ -13,7 +13,10 @@ def build(kind):
     domain='hustlerdior.'+kind
     out=ROOT/kind;out.mkdir(parents=True,exist_ok=True)
     source=kind+'_landing'
-    def link(url):return html.escape(url+('?' if '?' not in url else '&')+'utm_source='+source+'&utm_medium=referral&utm_campaign=concrete_edit',quote=True)
+    def link(url):
+        u=urlsplit(url)
+        query=urlencode(parse_qsl(u.query)+[('utm_source',source),('utm_medium','referral'),('utm_campaign','concrete_edit')])
+        return html.escape(urlunsplit((u.scheme,u.netloc,u.path,query,u.fragment)),quote=True)
     def image(p,w=640):return html.escape('https://hustlerdior.com/_next/image?url='+quote(p['image'],safe='')+'&w='+str(w)+'&q=75',quote=True)
     selected=products if kind=='shop' else [products[i] for i in [1,0,3,7,4,2,5,8,11]]
     hero=products[1] if kind=='shop' else products[7]
