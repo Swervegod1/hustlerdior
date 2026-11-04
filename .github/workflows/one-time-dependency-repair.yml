@@ -22,7 +22,8 @@ jobs:
       - name: Upgrade patched production dependencies
         run: npm install --save-exact next@16.4.5 sharp@0.35.5 zod@4.6.7
       - name: Repair compatible transitive advisories
-        run: npm audit fix
+        run: |
+          npm audit fix || echo "Some development-only advisories may remain; the explicit production audit follows."
       - name: Verify production dependencies
         run: npm audit --omit=dev --audit-level=high
       - run: npm run typecheck
