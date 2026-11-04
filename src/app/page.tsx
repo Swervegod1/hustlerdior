@@ -25,11 +25,11 @@ export default async function Home() {
   const featureId = process.env.APPROVED_EDITORIAL_FEATURE_PRODUCT_ID;
   const secondaryId = process.env.APPROVED_EDITORIAL_SECONDARY_PRODUCT_ID;
   const feature =
-    /^\\d+$/.test(featureId ?? "")
+    /^\d+$/.test(featureId ?? "")
       ? catalog?.products.find((p) => String(p.id) === featureId)
       : undefined;
   const secondary =
-    /^\\d+$/.test(secondaryId ?? "")
+    /^\d+$/.test(secondaryId ?? "")
       ? catalog?.products.find((p) => String(p.id) === secondaryId)
       : undefined;
   const editorial = feature ?? secondary;
