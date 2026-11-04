@@ -19,7 +19,7 @@ import { Experience } from "@/components/Experience";
 import { connection } from "next/server";
 import { requestPublicHost } from "@/lib/request-host";
 import { absoluteUrl, isIndexable, robotsMetadata } from "@/lib/seo";
-import { collections } from "@/lib/collections";
+import { directoryGroups } from "@/lib/navigation";
 import StyleDesk from "@/components/StyleDesk";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -94,21 +94,13 @@ gtag('config', 'G-F05DW777H4');`,
               UNFILTERED EXPRESSION.
             </p>
             <nav aria-label="Footer navigation">
-              {collections.map((c) => (
-                <Link key={c.slug} href={`/collections/${c.slug}`}>
-                  {c.name}
-                </Link>
-              ))}
-              <Link href="/guides">Guides</Link>
-              <Link href="/about">About Hustler Dior</Link>
-              <Link href="/world">The creative world</Link>
-              <Link href="/fit-guide">Fit guide</Link>
-              <Link href="/help">Ordering information</Link>
-              <Link href="/shipping">Shipping details</Link>
-              <Link href="/returns">Returns & damaged items</Link>
-              <Link href="/terms">Sale terms</Link>
-              <Link href="/contact">Contact the store</Link>
-              <Link href="/privacy">Photo & shopping privacy</Link>
+              {directoryGroups
+                .flatMap((group) => group.links)
+                .map((link) => (
+                  <Link key={link.href} href={link.href}>
+                    {link.label}
+                  </Link>
+                ))}
               <Link href="/#main">Back to top ↑</Link>
             </nav>
           </div>
