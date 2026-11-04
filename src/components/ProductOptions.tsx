@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { Product } from "@/lib/types";
 import { money } from "@/lib/format";
 import { useCart, useUI } from "@/stores/cart";
@@ -37,6 +38,7 @@ export default function ProductOptions({
   );
   const [message, setMessage] = useState("");
   const [adding, setAdding] = useState(false);
+  const [alternateImage, setAlternateImage] = useState<string | null>(null);
   const selected = product.variants.find(
     (v) => v.color === color && v.size === size,
   );
@@ -44,6 +46,8 @@ export default function ProductOptions({
   const display = selected ?? colorVariants[0];
   const image = display?.image ?? product.image;
   const colors = [...new Set(product.variants.map((v) => v.color))];
+  const galleryImages = [...new Set(colorVariants.map(v => v.image).filter((src): src is string => Boolean(src)))];
+  const galleryImage = alternateImage && galleryImages.includes(alternateImage) ? alternateImage : image;
   const add = useCart((s) => s.add);
   const Heading = page ? "h1" : "h2";
   async function addToBag() {
@@ -90,12 +94,24 @@ export default function ProductOptions({
   }
   return (
     <div className="product-options">
-      <ProductImageZoom
-        key={image ?? product.id}
-        src={image}
-        name={`${product.name} in ${color}`}
-        label={`HUSTLER DIOR / ${product.category.toUpperCase()}`}
-      />
+      <div className="product-gallery-column">
+        <ProductImageZoom
+          key={galleryImage ?? product.id}
+          src={galleryImage}
+          name={`${product.name} in ${color}`}
+          label={`HUSTLER DIOR / ${product.category.toUpperCase()}`}
+        />
+        {galleryImages.length > 1 && (
+          <div className="product-gallery-thumbs" role="group" aria-label="Alternate product views">
+            {galleryImages.slice(0, 6).map((src, index) => (
+              <button key={src} type="button" onClick={() => setAlternateImage(src)}
+                aria-pressed={galleryImage === src} aria-label={`View product image ${index + 1}`}>
+                <Image src={src} alt="" fill sizes="64px" />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
       <div className="option-copy">
         <p className="eyebrow">
           {product.audience.toUpperCase()} / {product.category.toUpperCase()}
@@ -117,6 +133,7 @@ export default function ProductOptions({
                 aria-pressed={color === c}
                 onClick={() => {
                   setColor(c);
+                  setAlternateImage(null);
                   setMessage("");
                   if (
                     !product.variants.some(
@@ -149,6 +166,7 @@ export default function ProductOptions({
                 aria-label={`${v.size}${v.stock !== "available" ? " unavailable" : ""}`}
                 onClick={() => {
                   setSize(v.size);
+                  setAlternateImage(null);
                   setMessage("");
                 }}
               >
@@ -177,6 +195,7 @@ export default function ProductOptions({
           <Arrow />
         </button>
         <TryOnButton product={product} variantId={display.id} />
+        <Link href="/help" className="fit-guide-link">SHIPPING & ORDER HELP ↗</Link>
         <p className="form-message" role="status">
           {message}
         </p>
@@ -189,6 +208,13 @@ export default function ProductOptions({
           <p>Original Hustler Dior collection.</p>
         </div>
       </div>
+      {page && (
+        <div className="mobile-sticky-atc" aria-label="Quick purchase controls">
+          <span><strong>{money(display.priceCents, display.currency)}</strong><small>{size ?? "Choose a size"}</small></span>
+          <button type="button" disabled={!selected || selected.stock !== "available" || adding}
+            onClick={addToBag}>{adding ? "CHECKING…" : "ADD TO BAG"}</button>
+        </div>
+      )}
     </div>
   );
 }

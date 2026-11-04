@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import Hero from "@/components/Hero";
+import EditorialHero from "@/components/EditorialHero";
+import DropCalendar from "@/components/DropCalendar";
 import Catalog from "@/components/Catalog";
 import { Arrow } from "@/components/Icons";
 import { initialCatalog } from "@/lib/server/catalog";
@@ -28,7 +29,7 @@ export default async function Home() {
     ) ?? catalog?.products[1];
   return (
     <main id="main" tabIndex={-1}>
-      <Hero
+      <EditorialHero
         feature={feature}
         secondary={catalog?.products.find((p) => p.category === "Accessories")}
       />
@@ -40,6 +41,7 @@ export default async function Home() {
         <span>HUSTLE IS AN ART FORM</span>
         <span aria-hidden="true">✳</span>
       </div>
+      <DropCalendar />
       <Catalog initial={catalog} />
       <Link href="/curated" className="extended-entry">
         <span>BEYOND THE EVERYDAY.</span>
@@ -49,6 +51,11 @@ export default async function Home() {
         </span>
       </Link>
       <CollectionLinks products={catalog?.products ?? []} />
+      <section className="seasonal-editorial" aria-label="The Concrete Edit">
+        <span>SEASONAL EDITORIAL / THE CONCRETE EDIT</span>
+        <strong>WEAR THE WORK. NOT THE HYPE.</strong>
+        <Link href="/collections/tees">EXPLORE ORIGINAL TEES ↗</Link>
+      </section>
       <section
         className="editorial"
         id="editorial"

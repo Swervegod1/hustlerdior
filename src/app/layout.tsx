@@ -10,6 +10,7 @@ import "./remix.css";
 import "./refinement.css";
 import "./sales.css";
 import "./growth.css";
+import "./editorial-sprint.css";
 import Navigation from "@/components/Navigation";
 import CartDrawer from "@/components/CartDrawer";
 import { Experience } from "@/components/Experience";

@@ -45,8 +45,13 @@ export default function ProductCard({
   const displayedVariants = preview
     ? product.variants.filter((v) => v.color === previewColor)
     : product.variants;
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const selectedQuick = displayedVariants.find((v) => v.size === selectedSize && v.stock === "available");
   const lowPrice = Math.min(...displayedVariants.map((v) => v.priceCents));
   const highPrice = Math.max(...displayedVariants.map((v) => v.priceCents));
+  const lowestVariant = displayedVariants.find((v) => v.priceCents === lowPrice);
+  const compareAt = lowestVariant?.compareAtPriceCents;
+  const discount = compareAt && compareAt > lowPrice ? Math.round((1 - lowPrice / compareAt) * 100) : null;
   const openDetails = () => onSelect(product, previewColor);
   function move(e: PointerEvent<HTMLElement>) {
     if (reduced || e.pointerType !== "mouse") return;
@@ -59,8 +64,9 @@ export default function ProductCard({
     my.set(y * 100);
   }
   async function quickAdd() {
-    if (product.variants.length !== 1 || variants.length !== 1)
+    if (!selectedQuick && !(product.variants.length === 1 && variants.length === 1))
       return openDetails();
+    const target = selectedQuick ?? variants[0];
     setAdding(true);
     setMessage("");
     try {
@@ -70,12 +76,12 @@ export default function ProductCard({
       if (!response.ok)
         throw new Error("Availability check failed. Please try again.");
       const { product: fresh }: { product: Product } = await response.json();
-      const variant = fresh.variants.find((v) => v.id === variants[0].id);
+      const variant = fresh.variants.find((v) => v.id === target.id);
       if (!variant || variant.stock !== "available")
         throw new Error("This piece is currently unavailable.");
       if (
-        variant.priceCents !== variants[0].priceCents ||
-        variant.currency !== variants[0].currency
+        variant.priceCents !== target.priceCents ||
+        variant.currency !== target.currency
       )
         throw new Error(
           "The price changed. Refresh the collection to continue.",
@@ -113,6 +119,8 @@ export default function ProductCard({
         <span className="product-category">
           {product.category.toUpperCase()}
         </span>
+        {!variants.length && <span className="product-stock-badge">SOLD OUT</span>}
+        {discount !== null && <span className="product-sale-badge">-{discount}%</span>}
         <button
           type="button"
           className="product-image-button"
@@ -149,9 +157,9 @@ export default function ProductCard({
             {adding
               ? "CHECKING…"
               : variants.length
-                ? product.variants.length > 1
-                  ? "CHOOSE YOUR FIT"
-                  : "QUICK ADD"
+                ? (selectedQuick || product.variants.length === 1)
+                  ? "QUICK ADD"
+                  : "SELECT SIZE"
                 : "UNAVAILABLE"}
           </span>
           <span className="plus">+</span>
@@ -172,7 +180,7 @@ export default function ProductCard({
                 aria-label={`Preview ${color}`}
                 title={color}
                 aria-pressed={previewColor === color}
-                onClick={() => setPreviewColor(color)}
+                onClick={() => { setPreviewColor(color); setSelectedSize(null); }}
               >
                 {variant?.image ? (
                   <Image src={variant.image} alt="" fill sizes="32px" />
@@ -194,17 +202,32 @@ export default function ProductCard({
           )}
         </div>
       )}
+      {variants.length > 0 && product.variants.length > 1 && (
+        <div className="card-size-picks" role="group" aria-label={`Select size for ${product.name}`}>
+          {[...new Map(displayedVariants.filter(v => v.stock === "available").map(v => [v.size, v])).values()].slice(0, 6).map((v) => (
+            <button key={v.id} type="button" disabled={adding}
+              aria-label={`Select size ${v.size}`} aria-pressed={selectedSize === v.size}
+              onClick={() => setSelectedSize(v.size)}>{v.size}</button>
+          ))}
+          {displayedVariants.filter(v => v.stock === "available").length > 6 && (
+            <button type="button" onClick={openDetails} aria-label="See all sizes">+</button>
+          )}
+        </div>
+      )}
       <div className="product-information">
         <div>
           <p className="product-audience">
             {product.audience} / {colors.length}{" "}
             {colors.length === 1 ? "color" : "colors"}
           </p>
+          <span className="card-brand">HUSTLER DIOR</span>
           <Link href={`/products/${product.slug}`} className="product-name">
             {shortName(product.name)}
           </Link>
+          <span className="card-colorway">{previewColor ?? colors[0] ?? "COLORWAY TBA"}</span>
         </div>
         <span className="product-price">
+          {discount !== null && compareAt && <del>{money(compareAt, product.currency)}</del>}
           {lowPrice !== highPrice && <small>From </small>}
           {money(lowPrice, product.currency)}
         </span>

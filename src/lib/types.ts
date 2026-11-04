@@ -9,6 +9,8 @@ export interface ProductVariant {
   size: string;
   color: string;
   priceCents: number;
+  /** Optional supplier-verified, genuine previous retail price; never inferred. */
+  compareAtPriceCents?: number;
   currency: string;
   image: string | null;
   stock: StockStatus;

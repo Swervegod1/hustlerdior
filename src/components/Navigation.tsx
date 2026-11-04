@@ -25,7 +25,17 @@ export default function Navigation() {
           </span>
         </Link>
         <nav aria-label="Main navigation">
-          <Link href="/#collection">SHOP ALL</Link>
+          <details className="releases-menu">
+            <summary>RELEASES <span aria-hidden="true">⌄</span></summary>
+            <div className="releases-panel" aria-label="Shop categories">
+              <Link href="/releases">DROP CALENDAR</Link>
+              <Link href="/#collection">BROWSE ALL</Link>
+              <Link href="/collections/tees">TEES</Link>
+              <Link href="/collections/hoodies-layers">HOODIES</Link>
+              <Link href="/collections/accessories">ACCESSORIES</Link>
+              <Link href="/sale">SALE</Link>
+            </div>
+          </details>
           <Link href="/collections/mens-streetwear">MEN</Link>
           <Link href="/collections/womens-streetwear">WOMEN</Link>
           <Link href="/collections/hoodies-layers">LAYERS</Link>
@@ -66,11 +76,14 @@ export default function Navigation() {
         className="mobile-shop-nav"
         aria-label="Mobile collection navigation"
       >
+        <Link href="/releases">RELEASES</Link>
         <Link href="/#collection">SHOP ALL</Link>
         <Link href="/collections/tees">TEES</Link>
         <Link href="/collections/mens-streetwear">MEN</Link>
         <Link href="/collections/womens-streetwear">WOMEN</Link>
         <Link href="/collections/hoodies-layers">LAYERS</Link>
+        <Link href="/collections/accessories">ACCESSORIES</Link>
+        <Link href="/sale">SALE</Link>
         <Link href="/curated">EXTENDED EDIT</Link>
         <Link href="/#editorial">CULTURE</Link>
       </nav>

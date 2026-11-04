@@ -17,6 +17,15 @@ export interface Collection {
 
 export const collections: Collection[] = [
   {
+    slug: "accessories",
+    name: "Accessories",
+    title: "Streetwear Accessories",
+    description: "Explore current Hustler Dior accessories with live size, color and availability information.",
+    intro: "The finishing pieces: browse accessories available from the current store catalog.",
+    note: "Check each product page for current options, measurements and delivery quotes.",
+    matches: (p) => p.category === "Accessories",
+  },
+  {
     slug: "tees",
     name: "Tees & tops",
     title: "Streetwear Tees & Tops",
