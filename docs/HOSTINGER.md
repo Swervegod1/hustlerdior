@@ -79,6 +79,12 @@ npm start
 
 The build creates a standalone Node server and copies its CSS, JavaScript and public assets. The preparation script removes local environment files from the standalone output.
 
+### Next.js 16.4.x build compatibility
+
+Hostinger's [Next.js 16 Turbopack build guidance](https://www.hostinger.com/support/how-to-fix-next-js-16-turbopack-build-errors-on-hostinger/) says versions 16.3.3+ must use Webpack on its build servers. `npm run build` uses `next build --webpack` and then **retains** `scripts/prepare-standalone.mjs` so the standalone server, static assets, payment worker, content, migrations, and database files stay packaged. Do not change the Vercel-only `vercel.json` build command for this Hostinger fix.
+
+If Hostinger still reports a generic build failure, run `npm ci`, `npm run typecheck`, `npm run lint`, then `npx next build --webpack --debug` in a clean local checkout and inspect the first error; the wrapper message alone is not a compiler diagnosis. Ensure uploaded ZIP archives exclude `node_modules/`, `.next/`, any stray `*.next.config.ts` generated copies, local `.env*` files and secrets, while retaining `next.config.ts`, `package.json`, `package-lock.json`, `public/`, `content/`, and `database/`. Hostinger uploads are source-only; keep existing production credentials and domain settings unchanged until a staging build passes.
+
 ## Hostinger ZIP deployment
 
 1. In hPanel, choose **Websites → Add Website → Deploy Web App → Upload your website files**.
