@@ -18,6 +18,7 @@ import {
 } from "../commerce-schema";
 import { contribution } from "../margins";
 import { hasDatabase } from "../env";
+import { resolveCatalogPrices } from "./stripe-catalog";
 import {
   ownerFromMetadata,
   snapshotFromMetadata,
@@ -253,6 +254,23 @@ export async function createCheckout(id: string, owner: string) {
   const tax = await verifyTaxConfiguration();
   if (tax.mode !== snap.taxMode || tax.live !== snap.livemode)
     throw new HttpError(409, "Checkout settings changed. Refresh your quote.");
+  const freshCart = await buildVerifiedCart(snap.cart);
+  if (
+    freshCart.currency !== snap.currency ||
+    freshCart.subtotalCents !== snap.subtotalCents ||
+    freshCart.lines.length !== snap.lines.length ||
+    freshCart.lines.some(
+      (line, index) =>
+        line.variantId !== snap.lines[index]?.variantId ||
+        line.priceCents !== snap.lines[index]?.priceCents ||
+        line.quantity !== snap.lines[index]?.quantity,
+    )
+  )
+    throw new HttpError(
+      409,
+      "Product pricing changed. Refresh your delivery quote.",
+    );
+  const lineItems = await resolveCatalogPrices(stripe, snap.lines);
   const address = {
     line1: snap.recipient.address1,
     line2: snap.recipient.address2 || "",
@@ -290,21 +308,7 @@ export async function createCheckout(id: string, owner: string) {
       success_url: `${origin}/orders/${id}`,
       cancel_url: `${origin}/checkout?cancelled=1`,
       automatic_tax: { enabled: snap.taxMode === "automatic" },
-      line_items: snap.lines.map((line) => ({
-        quantity: line.quantity,
-        price_data: {
-          currency: "usd",
-          unit_amount: line.priceCents,
-          tax_behavior: "exclusive",
-          product_data: {
-            name: line.name,
-            metadata: {
-              hd_variant_id: String(line.variantId),
-              hd_product_id: String(line.productId),
-            },
-          },
-        },
-      })),
+      line_items: lineItems,
       shipping_options: [
         {
           shipping_rate_data: {

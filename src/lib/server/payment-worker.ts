@@ -100,8 +100,12 @@ export async function processPaidOrder(
     lines: lines.data.map((line) => {
       const product = line.price?.product as Stripe.Product | undefined;
       return {
-        variantId: product?.metadata?.hd_variant_id,
-        productId: product?.metadata?.hd_product_id,
+        variantId:
+          line.price?.metadata?.printful_sync_variant_id ??
+          product?.metadata?.hd_variant_id,
+        productId:
+          line.price?.metadata?.printful_sync_product_id ??
+          product?.metadata?.hd_product_id,
         quantity: line.quantity,
         unitAmount: line.price?.unit_amount ?? null,
         subtotal: line.amount_subtotal,
