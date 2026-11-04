@@ -22,7 +22,7 @@ body {
   display: flex;
   align-items: center;
   padding: 0 5%;
-  gap: clamp(30px, 9vw, 150px);
+  gap: clamp(16px, 3vw, 48px);
   background: #080808f5;
   border-bottom: 1px solid #9c9790;
 }
@@ -46,7 +46,7 @@ body {
 .chrome-main-nav {
   display: flex;
   align-items: center;
-  gap: 42px;
+  gap: 24px;
   height: 100%;
   font:
     500 23px var(--font-condensed),
@@ -100,6 +100,100 @@ body {
 }
 .chrome-mobile-menu {
   display: none;
+}
+.chrome-directory {
+  height: 100%;
+  position: relative;
+}
+.chrome-directory > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+.chrome-directory > summary::-webkit-details-marker,
+.chrome-mobile-menu > summary::-webkit-details-marker {
+  display: none;
+}
+.chrome-directory[open] > summary,
+.chrome-directory > summary[data-active] {
+  border-bottom-color: #d10a12;
+}
+.chrome-directory-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 270px;
+  padding: 8px;
+  background: #111;
+  border: 1px solid #9c9790;
+  box-shadow: 0 16px 32px #0009;
+}
+.chrome-directory-panel a {
+  min-height: 44px;
+  padding: 10px 12px;
+  height: auto;
+  font-size: 20px;
+}
+.chrome-directory-panel a::after {
+  display: none;
+}
+.chrome-directory-panel a:hover,
+.chrome-directory-panel a[aria-current],
+.chrome-mobile-menu nav a:hover,
+.chrome-mobile-menu nav a[aria-current] {
+  background: #650008;
+}
+.chrome-navigation :is(a, button, summary):focus-visible {
+  outline: 2px solid #f2eee9;
+  outline-offset: 2px;
+}
+.chrome-mobile-menu > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.chrome-mobile-menu nav {
+  position: absolute;
+  right: 10px;
+  top: 100%;
+  width: min(340px, calc(100vw - 20px));
+  max-height: calc(100dvh - 80px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #111;
+  border: 1px solid #aaa;
+  padding: 10px;
+  display: grid;
+}
+.chrome-mobile-menu nav a {
+  display: block;
+  padding: 12px;
+  min-height: 44px;
+  font: 500 20px var(--font-condensed);
+}
+.chrome-directory-group {
+  display: grid;
+}
+.chrome-directory-label {
+  padding: 14px 12px 6px;
+  border-top: 1px solid #454141;
+  color: #c9c9c9;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+@media (max-width: 899px) {
+  .chrome-main-nav {
+    display: none;
+  }
+  .chrome-mobile-menu {
+    display: block;
+  }
 }
 .chrome-banner {
   position: relative;

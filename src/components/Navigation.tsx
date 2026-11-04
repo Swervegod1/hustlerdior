@@ -1,14 +1,56 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useCart, useUI } from "@/stores/cart";
 import { MagnifyingGlass, ShoppingBag, List } from "@phosphor-icons/react";
 import BrandCrest from "./BrandCrest";
+import { directoryGroups } from "@/lib/navigation";
 export default function Navigation() {
+  const header = useRef<HTMLElement>(null);
   const count = useCart((s) => s.lines.reduce((n, l) => n + l.quantity, 0));
   const path = usePathname();
+  function closeMenus() {
+    header.current?.querySelectorAll("details[open]").forEach((menu) => {
+      menu.removeAttribute("open");
+    });
+  }
+  useEffect(() => {
+    function outsideClick(event: MouseEvent) {
+      if (
+        event.target instanceof Node &&
+        !header.current?.contains(event.target)
+      ) {
+        closeMenus();
+      }
+    }
+    document.addEventListener("click", outsideClick);
+    return () => document.removeEventListener("click", outsideClick);
+  }, []);
+  function directoryLink(link: { href: string; label: string }) {
+    return (
+      <Link
+        key={link.href}
+        href={link.href}
+        aria-current={path === link.href ? "page" : undefined}
+        onClick={closeMenus}
+      >
+        {link.label}
+      </Link>
+    );
+  }
   return (
-    <header className="chrome-navigation">
+    <header
+      className="chrome-navigation"
+      ref={header}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") {
+          const menu = (event.target as HTMLElement).closest("details[open]");
+          closeMenus();
+          menu?.querySelector("summary")?.focus();
+        }
+      }}
+    >
       <Link href="/" aria-label="Hustler Dior home">
         <BrandCrest />
       </Link>
@@ -19,12 +61,33 @@ export default function Navigation() {
         >
           Shop all
         </Link>
-        <Link
-          href="/collections/tees"
-          aria-current={path === "/collections/tees" ? "page" : undefined}
-        >
-          Graphic tees
-        </Link>
+        {directoryGroups.map((group) => (
+          <details
+            key={group.label}
+            className="chrome-directory"
+            onToggle={(event) => {
+              if (event.currentTarget.open) {
+                header.current
+                  ?.querySelectorAll("details[open]")
+                  .forEach((menu) => {
+                    if (menu !== event.currentTarget)
+                      menu.removeAttribute("open");
+                  });
+              }
+            }}
+          >
+            <summary
+              data-active={
+                group.links.some((link) => link.href === path) || undefined
+              }
+            >
+              {group.label} <span aria-hidden="true">⌄</span>
+            </summary>
+            <div className="chrome-directory-panel">
+              {group.links.map(directoryLink)}
+            </div>
+          </details>
+        ))}
       </nav>
       <div className="chrome-nav-actions">
         <Link href="/#search-pieces" aria-label="Search the collection">
@@ -45,11 +108,15 @@ export default function Navigation() {
             <List size={25} weight="light" />
           </summary>
           <nav aria-label="Mobile collection navigation">
-            <Link href="/?collection=all#collection">Shop all</Link>
-            <Link href="/collections/tees">Graphic tees</Link>
-            <Link href="/collections/hoodies-layers">Hoodies & layers</Link>
-            <Link href="/collections/accessories">Accessories</Link>
-            <Link href="/about">About us</Link>
+            <Link href="/?collection=all#collection" onClick={closeMenus}>
+              Shop all
+            </Link>
+            {directoryGroups.map((group) => (
+              <div className="chrome-directory-group" key={group.label}>
+                <span className="chrome-directory-label">{group.label}</span>
+                {group.links.map(directoryLink)}
+              </div>
+            ))}
           </nav>
         </details>
       </div>
