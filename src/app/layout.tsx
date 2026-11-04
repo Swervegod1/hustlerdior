@@ -4,13 +4,15 @@ import "@fontsource/anton/latin-400.css";
 import "@fontsource/dm-sans/latin-400.css";
 import "@fontsource/dm-sans/latin-500.css";
 import "@fontsource/dm-sans/latin-700.css";
-import "lenis/dist/lenis.css";
+import "@fontsource/barlow-condensed/latin-500.css";
 import "./globals.css";
 import "./remix.css";
 import "./refinement.css";
 import "./sales.css";
 import "./growth.css";
 import "./editorial-sprint.css";
+import "./streetwear.css";
+import BrandCrest from "@/components/BrandCrest";
 import Navigation from "@/components/Navigation";
 import CartDrawer from "@/components/CartDrawer";
 import { Experience } from "@/components/Experience";
@@ -57,7 +59,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-F05DW777H4" />
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-F05DW777H4"
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.dataLayer = window.dataLayer || [];
@@ -76,7 +81,12 @@ gtag('config', 'G-F05DW777H4');`,
         <CartDrawer />
         <Experience />
         <StyleDesk />
-        <footer className="footer">
+        <footer className="footer chrome-footer">
+          <div className="crest-divider">
+            <span />
+            <BrandCrest />
+            <span />
+          </div>
           <div className="footer-top">
             <p>
               INDEPENDENT STREETWEAR.
@@ -101,9 +111,6 @@ gtag('config', 'G-F05DW777H4');`,
               <Link href="/privacy">Photo & shopping privacy</Link>
               <Link href="/#main">Back to top ↑</Link>
             </nav>
-          </div>
-          <div className="footer-wordmark">
-            HUSTLER DIOR<span>✳</span>
           </div>
           <div className="footer-bottom">
             <span>© {new Date().getFullYear()} HUSTLER DIOR</span>
