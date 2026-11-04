@@ -1,4 +1,5 @@
 /** Runtime env shape for Hostinger Node deploys. Never invent or log secret values. */
+import { checkoutRequirements } from "./checkout-readiness.mjs";
 
 export function printfulToken() {
   return process.env.PRINTFUL_API_TOKEN || process.env.PRINTFUL_API_KEY || "";
@@ -23,14 +24,7 @@ export function stripeKeyValid(key = stripeSecret()) {
  * Readiness keys must only be set after testing actual services.
  */
 export function checkoutConfigured() {
-  return (
-    process.env.CHECKOUT_ENABLED === "true" &&
-    stripeKeyValid() &&
-    printfulConfigured() &&
-    hasDatabase() &&
-    process.env.PAYMENT_WORKER_READY === "true" &&
-    process.env.STORE_POLICIES_APPROVED === "true"
-  );
+  return Object.values(checkoutRequirements()).every(Boolean);
 }
 
 export function sessionSecret() {
@@ -46,5 +40,7 @@ export function hasDatabase() {
 
 /** Snapshot is visual-only. Live Printful wins whenever the store token is set. */
 export function catalogUsesSnapshot() {
-  return process.env.CATALOG_SNAPSHOT_PREVIEW === "true" && !printfulConfigured();
+  return (
+    process.env.CATALOG_SNAPSHOT_PREVIEW === "true" && !printfulConfigured()
+  );
 }

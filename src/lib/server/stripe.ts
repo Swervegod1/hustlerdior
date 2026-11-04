@@ -37,9 +37,12 @@ export async function verifyTaxConfiguration() {
       settings.status !== "active" ||
       !settings.defaults.tax_code
     )
-      return { mode: "test_none" as const, live: config.live };
+      throw new Error("Configured automatic tax is not ready");
   } catch {
-    return { mode: "test_none" as const, live: config.live };
+    throw new HttpError(
+      503,
+      "Tax settings are being verified. Please try again later.",
+    );
   }
   return config;
 }
