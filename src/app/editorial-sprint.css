@@ -60,3 +60,14 @@
 @media(max-width:1000px){.lookbook-detail{display:none}.lookbook-hero{min-height:700px}.lookbook-copy{max-width:680px}.lookbook-art .lookbook-product-image{transform:translateX(27%) scale(.9);opacity:.6}}
 @media(max-width:760px){.lookbook-hero{min-height:740px;min-height:95svh;padding:20px 22px}.lookbook-copy{padding-block:115px 85px}.lookbook-copy h1{font-size:clamp(64px,16vw,115px)}.lookbook-art .lookbook-product-image{object-position:60% 55%;transform:translate(16%,8%) scale(1.05);opacity:.55}.lookbook-topline span:last-child,.lookbook-footer span:nth-child(2){display:none}.lookbook-copy>p:not(.lookbook-kicker){max-width:330px}.lookbook-actions{gap:8px}.lookbook-actions>a{width:100%;max-width:360px}.drop-calendar{grid-template-columns:1fr;padding:32px 22px}.drop-calendar-panel{min-height:320px}.seasonal-editorial{padding:35px 22px}.card-size-picks{gap:4px}.mobile-sticky-atc{display:flex;position:fixed;bottom:0;left:0;right:0;padding:12px max(14px,env(safe-area-inset-left)) calc(12px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-right));z-index:55;background:#121212;color:white;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 -10px 40px rgba(0,0,0,.3)}.mobile-sticky-atc span{display:flex;flex-direction:column;font-size:17px}.mobile-sticky-atc small{font-size:11px;color:#b6b6b6}.mobile-sticky-atc button{padding:13px 20px;background:#f56e52;border:0;color:#131313;font-weight:800;letter-spacing:.04em;min-height:44px}.mobile-sticky-atc button:disabled{opacity:.55}.product-page{padding-bottom:85px}.navigation nav .releases-menu{display:none}}
 @media(prefers-reduced-motion:reduce){.lookbook-art .lookbook-product-image{transition:none}.card-size-picks button{transition:none}}
+
+/* Uniform transparent garment staging. Keep source-image pixels intact. */
+.product-card .product-visual{aspect-ratio:4/5;background:#e8e5df}
+.product-card .product-image{object-fit:contain;object-position:50% 50%;padding:7%;mix-blend-mode:normal;filter:drop-shadow(0 16px 15px rgba(25,20,18,.18))}
+.product-card .card-color-previews img{mix-blend-mode:normal}
+.product-card .product-stock-badge{background:#131313;color:#fff}
+.product-card .product-sale-badge{background:#ce432b;color:#fff}
+@media(max-width:760px){
+  .product-card .product-visual{aspect-ratio:4/5}
+  .product-card .product-image{padding:5%;filter:drop-shadow(0 9px 9px rgba(25,20,18,.16))}
+}

@@ -1,7 +1,5 @@
 name: Storefront regression checks
 on:
-  push:
-    branches: [ "feature/**", "main" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:

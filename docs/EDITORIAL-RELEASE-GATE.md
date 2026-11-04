@@ -22,3 +22,10 @@
 8. Only then deploy to `hustlerdior.com`; perform post-release `/api/health`, product page, cart, quote, webhook and monitoring checks. No unapproved live payment or fulfillment changes.
 
 **Release status:** NOT CLEARED until every blocking requirement is verified. CI alone does not clear the production gate.
+
+## CI diagnostic note — November 3 / November 4, 2026
+- Re-running the previous failure and pushing the follow-up branch commit both led to pre-run GitHub Actions job failures: no runner attached, no executable steps, no compute time.
+- Do **not** report this as a passing or failing code-level test. Open [the repository Actions page](https://github.com/Swervegod1/hustlerdior/actions), inspect the verify job's prominent error banner, then check repository Actions permissions and applicable GitHub account restrictions. Do not assume a billing issue for a public repository; standard Linux runners are generally free for public repositories.
+- Updated the workflow to avoid duplicate push + PR jobs and allow workflow_dispatch. New feature commits should only run the PR job.
+- If no GitHub Actions runner can start, execute `npm ci && npm run typecheck && npm run lint && npm test && npm run test:server && npm run build` in an authorized Node 22 environment and retain raw logs, **then** separately restore GitHub CI before production promotion.
+- Never deploy merely to test whether the build succeeds.
