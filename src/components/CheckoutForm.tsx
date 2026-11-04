@@ -121,9 +121,10 @@ export default function CheckoutForm({ enabled }: { enabled: boolean }) {
         <div className="checkout-readiness" role="status">
           <span aria-hidden="true">✳</span>
           <p>
-            <strong>Online payment is not configured on this storefront.</strong>{" "}
-            Delivery quotes and Stripe checkout stay unavailable until Stripe
-            keys are set on the host. Your bag stays saved on this device.
+            <strong>Secure checkout is temporarily unavailable.</strong>{" "}
+            We are completing payment, order-storage and fulfillment checks
+            before accepting purchases. Your bag stays saved on this device,
+            and you have not been charged.
           </p>
         </div>
       )}
@@ -286,7 +287,7 @@ export default function CheckoutForm({ enabled }: { enabled: boolean }) {
             {busy ? "PLEASE WAIT…" : "CONTINUE TO SECURE PAYMENT"}
             <Arrow />
           </button>
-          <p className="form-message" role="status">
+          <p className="form-message" role="status" aria-live="polite">
             {message ||
               (!enabled
                 ? "Payment is not currently collected through this storefront. Your bag stays saved on this device."
