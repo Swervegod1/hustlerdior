@@ -1,0 +1,129 @@
+{
+  "deployment": {
+    "uuid": "01a1a84a-716e-70c3-a0b3-a0ae389f4953",
+    "state": "completed",
+    "options": {
+      "node_version": 22,
+      "app_type": "next",
+      "root_directory": null,
+      "output_directory": ".next",
+      "build_script": "build",
+      "entry_file": null,
+      "package_manager": "npm",
+      "source_type": "git",
+      "source_options": {
+        "archive_path": null,
+        "owner": "Swervegod1",
+        "repository": "hustlerdior",
+        "branch": "main",
+        "installation_uuid": "01a0a272-a048-7209-9086-54f3dee03a96",
+        "commit": {
+          "hash": "7c5ede1ef5a2df3e1e759849d4169a244de8d6e9",
+          "message": "Merge pull request #20 from Swervegod1/fix/stripe-catalog-activation-20261104\n\nConnect checkout to persistent Stripe catalog with verified account scope",
+          "author": {
+            "name": "Chase W Stemple",
+            "avatar_url": "https://avatars.githubusercontent.com/u/88987573?v=4"
+          }
+        }
+      }
+    },
+    "created_at": "2026-11-04T20:40:13Z",
+    "updated_at": "2026-11-04T20:43:56Z"
+  },
+  "smoke": [
+    {
+      "path": "/",
+      "status": 200,
+      "canonical": "https://hustlerdior.com"
+    },
+    {
+      "path": "/api/health",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "service": "hustlerdior",
+        "printful": true,
+        "checkout": false
+      }
+    },
+    {
+      "path": "/api/products?limit=1&offset=0",
+      "status": 200,
+      "products": 1,
+      "paging": {
+        "total": 159,
+        "limit": 1,
+        "offset": 0,
+        "nextOffset": 1
+      }
+    },
+    {
+      "path": "/checkout",
+      "status": 200,
+      "canonical": null,
+      "blockedMessagePresent": false
+    },
+    {
+      "path": "/api/internal/payment-worker",
+      "status": 503,
+      "body": {
+        "error": "Worker unavailable."
+      }
+    },
+    {
+      "path": "/api/checkout/quote",
+      "status": 503,
+      "body": {
+        "error": "Online payment is not configured on this storefront. Your bag is saved."
+      }
+    },
+    {
+      "path": "/api/webhooks/stripe",
+      "status": 400,
+      "body": {
+        "error": "Invalid webhook."
+      }
+    },
+    {
+      "path": "https://www.hustlerdior.com",
+      "status": 308,
+      "location": "https://hustlerdior.com/"
+    }
+  ],
+  "browser": {
+    "productSelection": "PASS: Black / M",
+    "cart": "PASS: quantity 1, subtotal $31.91",
+    "checkout": "PASS: unavailable message, saved bag, delivery and payment disabled"
+  },
+  "margin": {
+    "samples": 312,
+    "successful": 310,
+    "belowFloor": 287,
+    "negativeContribution": 38,
+    "floor": 0.35,
+    "diagnostics": {
+      "contributionFloor": 0.35,
+      "estimates": [
+        {
+          "variantId": 5497843818,
+          "status": 400,
+          "message": "Item 0: Unavailable variant id used"
+        },
+        {
+          "variantId": 5497843821,
+          "status": 400,
+          "message": "Item 0: Unavailable variant id used"
+        }
+      ]
+    }
+  },
+  "tests": {
+    "unit": 84,
+    "server": 10,
+    "typecheck": "PASS",
+    "lint": "0 errors; one pre-existing warning",
+    "build": "PASS"
+  },
+  "completedLivePayment": false,
+  "sandboxPaymentVerified": false
+}
