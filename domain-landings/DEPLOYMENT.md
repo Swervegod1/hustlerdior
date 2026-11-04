@@ -16,7 +16,7 @@
 
 - Existing Hostinger Horizons website: 28c7f8d1-1af3-4649-811f-12eed51df728.
 - Submitted the homepage design, real catalog and .com purchase links to Horizons. Existing other routes and integrations were explicitly preserved in the edit request.
-- Hostinger accepted publication after generation finished. Public verification is tracked separately; do not treat a publishing response as proof of a completed deployment.
+- Hostinger accepted publication after generation finished. Verified the public homepage returns HTTP 200 with The Concrete Shop title, WEAR YOUR OWN STORY hero, and actual product images and links. A subsequent targeted correction fixes query placement before collection fragments.
 - The `shop` directory is the static reference design. Horizons translates the brief into its own React application, so its generated code is not the same source as the static reference.
 
 ## Source control
