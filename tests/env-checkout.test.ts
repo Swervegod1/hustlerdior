@@ -24,6 +24,8 @@ const keys = [
   "APP_SESSION_SECRET",
   "CATALOG_SNAPSHOT_PREVIEW",
   "DATABASE_URL",
+  "PAYMENT_WORKER_READY",
+  "STORE_POLICIES_APPROVED",
 ] as const;
 
 function withEnv(values: Partial<Record<(typeof keys)[number], string | undefined>>, fn: () => void) {
@@ -88,30 +90,36 @@ test("snapshot preview is skipped when Printful is configured", () => {
   );
 });
 
-test("checkout opens for a valid Stripe secret unless explicitly disabled", () => {
-  withEnv(
-    {
-      STRIPE_SECRET_KEY: "sk_test_notasecret_placeholder_value",
-      CHECKOUT_ENABLED: undefined,
-      DATABASE_URL: undefined,
-      APP_SESSION_SECRET: undefined,
-    },
-    () => {
-      assert.equal(stripeKeyValid(), true);
-      assert.equal(checkoutConfigured(), true);
-      assert.ok((sessionSecret()?.length ?? 0) >= 32);
-    },
-  );
-  withEnv(
-    {
-      STRIPE_SECRET_KEY: "sk_live_notasecret_placeholder_value",
-      CHECKOUT_ENABLED: "false",
-    },
-    () => assert.equal(checkoutConfigured(), false),
-  );
-  withEnv(
-    { STRIPE_SECRET_KEY: undefined, CHECKOUT_ENABLED: "true" },
-    () => assert.equal(checkoutConfigured(), false),
+test("checkout fails closed until DB, worker, policies and providers are confirmed", () => {
+  const ready = {
+    STRIPE_SECRET_KEY: "sk_test_notasecret_placeholder_value",
+    CHECKOUT_ENABLED: "true",
+    PRINTFUL_API_TOKEN: "test-fixture-token",
+    PRINTFUL_STORE_ID: "12345",
+    DATABASE_URL: "postgresql://mock.invalid/test",
+    PAYMENT_WORKER_READY: "true",
+    STORE_POLICIES_APPROVED: "true",
+  };
+  withEnv(ready, () => {
+    assert.equal(stripeKeyValid(), true);
+    assert.equal(checkoutConfigured(), true);
+    assert.ok((sessionSecret()?.length ?? 0) >= 32);
+  });
+  for (const key of [
+    "STRIPE_SECRET_KEY",
+    "CHECKOUT_ENABLED",
+    "PRINTFUL_API_TOKEN",
+    "PRINTFUL_STORE_ID",
+    "DATABASE_URL",
+    "PAYMENT_WORKER_READY",
+    "STORE_POLICIES_APPROVED",
+  ] as const) {
+    withEnv({ ...ready, [key]: undefined }, () => {
+      assert.equal(checkoutConfigured(), false, `Must fail closed without ${key}`);
+    });
+  }
+  withEnv({ ...ready, CHECKOUT_ENABLED: "false" }, () =>
+    assert.equal(checkoutConfigured(), false),
   );
 });
 

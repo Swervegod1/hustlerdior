@@ -46,7 +46,10 @@ export default function ProductCard({
     ? product.variants.filter((v) => v.color === previewColor)
     : product.variants;
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const selectedQuick = displayedVariants.find((v) => v.size === selectedSize && v.stock === "available");
+  // For multi-color products, never quick-add an arbitrary first color.
+  const selectedQuick = (colors.length === 1 || previewColor)
+    ? displayedVariants.find((v) => v.size === selectedSize && v.stock === "available")
+    : undefined;
   const lowPrice = Math.min(...displayedVariants.map((v) => v.priceCents));
   const highPrice = Math.max(...displayedVariants.map((v) => v.priceCents));
   const lowestVariant = displayedVariants.find((v) => v.priceCents === lowPrice);
@@ -202,7 +205,7 @@ export default function ProductCard({
           )}
         </div>
       )}
-      {variants.length > 0 && product.variants.length > 1 && (
+      {variants.length > 0 && product.variants.length > 1 && (colors.length === 1 || Boolean(previewColor)) && (
         <div className="card-size-picks" role="group" aria-label={`Select size for ${product.name}`}>
           {[...new Map(displayedVariants.filter(v => v.stock === "available").map(v => [v.size, v])).values()].slice(0, 6).map((v) => (
             <button key={v.id} type="button" disabled={adding}

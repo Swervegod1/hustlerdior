@@ -17,9 +17,20 @@ export function stripeKeyValid(key = stripeSecret()) {
   return /^[rs]k_(test|live)_/.test(key);
 }
 
-/** Checkout is on whenever a valid Stripe secret is present, unless explicitly disabled. */
+/**
+ * Never take a payment while order persistence, fulfillment processing, or
+ * customer policies are unverified. All gates are explicitly opt-in.
+ * Readiness keys must only be set after testing actual services.
+ */
 export function checkoutConfigured() {
-  return process.env.CHECKOUT_ENABLED !== "false" && stripeKeyValid();
+  return (
+    process.env.CHECKOUT_ENABLED === "true" &&
+    stripeKeyValid() &&
+    printfulConfigured() &&
+    hasDatabase() &&
+    process.env.PAYMENT_WORKER_READY === "true" &&
+    process.env.STORE_POLICIES_APPROVED === "true"
+  );
 }
 
 export function sessionSecret() {

@@ -32,3 +32,6 @@
 
 ## Featured artwork rights gate
 The hero's production asset is not automatically selected from a potentially rights-sensitive catalog. A rights-cleared product may be featured **only after documentation and owner approval** via `APPROVED_EDITORIAL_FEATURE_PRODUCT_ID` or `APPROVED_EDITORIAL_SECONDARY_PRODUCT_ID`, using current catalog product IDs. Without approval, the hero shows typographic editorial treatment (no unverified product endorsement). This is a release-safety gate, not a substitute for a complete catalog IP review. Existing product pages are not modified in this branch.
+
+## Enforced checkout readiness
+The branch now **fails closed** for checkout unless these conditions are all true: `CHECKOUT_ENABLED=true`, a syntactically valid Stripe secret, configured Printful store/token, a nonempty PostgreSQL `DATABASE_URL`, `PAYMENT_WORKER_READY=true`, and `STORE_POLICIES_APPROVED=true`. The latter two flags are owner/operator attestations that require independent evidence, not automatic proof of health. Do **not** set them simply to make checkout open. Existing deployment has none of the last three keys; therefore this release branch would disable new payments if deployed before reconciliation. Verify order history, schema migrations, API and worker health, policy sign-off and backup/restore first.
