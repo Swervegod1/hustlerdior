@@ -27,5 +27,5 @@ test("Editorial heroes never automatically feature unreviewed artwork", () => {
   const home = read("src/app/page.tsx");
   assert.match(home, /APPROVED_EDITORIAL_FEATURE_PRODUCT_ID/);
   assert.match(home, /APPROVED_EDITORIAL_SECONDARY_PRODUCT_ID/);
-  assert.doesNotMatch(home, /catalog\\?\\.products\\[0\\]/);
+  assert.doesNotMatch(home, /catalog\?\.products\[0\]/);
 });
