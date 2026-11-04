@@ -22,3 +22,10 @@ test("Product details and menu have accessible controls", () => {
   assert.match(read("src/components/ProductOptions.tsx"), /aria-pressed/);
   assert.match(read("src/components/Navigation.tsx"), /<summary>RELEASES/);
 });
+
+test("Editorial heroes never automatically feature unreviewed artwork", () => {
+  const home = read("src/app/page.tsx");
+  assert.match(home, /APPROVED_EDITORIAL_FEATURE_PRODUCT_ID/);
+  assert.match(home, /APPROVED_EDITORIAL_SECONDARY_PRODUCT_ID/);
+  assert.doesNotMatch(home, /catalog\\?\\.products\\[0\\]/);
+});

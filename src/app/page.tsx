@@ -20,18 +20,24 @@ export const metadata: Metadata = {
 export default async function Home() {
   await connection();
   const catalog = await initialCatalog();
+  // Editorial slots are opt-in. Do not automatically promote unreviewed
+  // public figures, characters, logos, or other rights-sensitive artwork.
+  const featureId = process.env.APPROVED_EDITORIAL_FEATURE_PRODUCT_ID;
+  const secondaryId = process.env.APPROVED_EDITORIAL_SECONDARY_PRODUCT_ID;
   const feature =
-    catalog?.products.find((p) => /skullfx/i.test(p.name)) ??
-    catalog?.products[0];
-  const editorial =
-    catalog?.products.find((p) =>
-      /oversized heavyweight sweatshirt/i.test(p.name),
-    ) ?? catalog?.products[1];
+    /^\\d+$/.test(featureId ?? "")
+      ? catalog?.products.find((p) => String(p.id) === featureId)
+      : undefined;
+  const secondary =
+    /^\\d+$/.test(secondaryId ?? "")
+      ? catalog?.products.find((p) => String(p.id) === secondaryId)
+      : undefined;
+  const editorial = feature ?? secondary;
   return (
     <main id="main" tabIndex={-1}>
       <EditorialHero
         feature={feature}
-        secondary={catalog?.products.find((p) => p.category === "Accessories")}
+        secondary={secondary}
       />
       <div className="manifesto-strip">
         <span>MAKE YOUR OWN RULES</span>

@@ -29,3 +29,6 @@
 - Updated the workflow to avoid duplicate push + PR jobs and allow workflow_dispatch. New feature commits should only run the PR job.
 - If no GitHub Actions runner can start, execute `npm ci && npm run typecheck && npm run lint && npm test && npm run test:server && npm run build` in an authorized Node 22 environment and retain raw logs, **then** separately restore GitHub CI before production promotion.
 - Never deploy merely to test whether the build succeeds.
+
+## Featured artwork rights gate
+The hero's production asset is not automatically selected from a potentially rights-sensitive catalog. A rights-cleared product may be featured **only after documentation and owner approval** via `APPROVED_EDITORIAL_FEATURE_PRODUCT_ID` or `APPROVED_EDITORIAL_SECONDARY_PRODUCT_ID`, using current catalog product IDs. Without approval, the hero shows typographic editorial treatment (no unverified product endorsement). This is a release-safety gate, not a substitute for a complete catalog IP review. Existing product pages are not modified in this branch.
