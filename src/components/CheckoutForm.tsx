@@ -121,10 +121,8 @@ export default function CheckoutForm({ enabled }: { enabled: boolean }) {
         <div className="checkout-readiness" role="status">
           <span aria-hidden="true">✳</span>
           <p>
-            <strong>Secure checkout is temporarily unavailable.</strong>{" "}
-            We are completing payment, order-storage and fulfillment checks
-            before accepting purchases. Your bag stays saved on this device,
-            and you have not been charged.
+            <strong>Checkout is temporarily unavailable.</strong>{" "}
+            Your bag is saved on this device.
           </p>
         </div>
       )}
@@ -134,8 +132,11 @@ export default function CheckoutForm({ enabled }: { enabled: boolean }) {
             <span className="eyebrow">01 / WHERE YOUR PIECES ARE GOING</span>
             <h2>DELIVERY DETAILS.</h2>
             <p className="field-hint">
-              United States delivery. Review your address and the live quote
-              before continuing to secure payment.
+              United States delivery. Each piece is made to order. Review the
+              live shipping quote before payment.{" "}
+              <Link href="/shipping">Shipping details</Link>
+              {" · "}
+              <Link href="/returns">Returns and order support</Link>
             </p>
             <fieldset disabled={busy || !enabled}>
               <legend className="sr-only">Delivery address</legend>
