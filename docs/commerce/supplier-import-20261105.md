@@ -1,6 +1,6 @@
 # Supplier import and order routing — 2026-11-05
 
-Status: staged private drafts only. No live products, orders, purchases, email sends or payout changes.
+Status: private drafts uploaded to the existing commerce database with all three intended domains assigned. The owner-approved 7% markup is applied to 718 option amounts; see [pricing verification](supplier-pricing-7pct-20261105.md). No live supplier products, orders, purchases, email sends or payout changes.
 
 Confirmed merchant choice: purchase alerts to hustlerdior@gmail.com; proceeds remain in Hustler Dior LLC's existing Stripe balance and payout account (acct_1T2CVABQlp4SmhNo).
 
@@ -30,7 +30,7 @@ The external records do not belong to Printful. Existing Printful catalog, varia
 - STORE_POLICIES_APPROVED missing
 - No application transactional email credentials configured
 - External supplier checkout/fulfillment adapter not implemented
-- Hustler Dior retail prices and landed costs not verified
+- Landed costs not verified; the owner-approved 7% retail markup has been applied separately
 - Some exact merchant links and full variant matrices unresolved
 - Firecrawl connected-app credit allowance exhausted; no credits purchased
 
